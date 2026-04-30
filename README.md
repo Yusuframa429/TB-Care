@@ -1,17 +1,45 @@
-# tb_care
+# TB Care
 
-A new Flutter project.
+Aplikasi Flutter untuk pemantauan dan kepedulian Tuberkulosis (TB). Proyek ini dibangun menggunakan arsitektur **Modular / Monorepo** agar kode lebih rapi, terukur, dan mudah dikolaborasikan oleh tim.
 
-## Getting Started
+## 📦 Struktur Proyek (Monorepo)
 
-This project is a starting point for a Flutter application.
+Proyek ini menggunakan **Melos** dan fitur bawaan *Dart Workspaces* untuk mengelola multi-package. Struktur utamanya meliputi:
 
-A few resources to get you started if this is your first Flutter project:
+- `/` (Root): Aplikasi utama `tb_care` yang menyatukan semua fitur.
+- `/packages/core_ui`: Package khusus untuk komponen UI visual (tombol, input, warna, tema) yang dapat digunakan ulang.
+- `/packages/core_services`: Package khusus untuk logika bisnis, integrasi API, database lokal, dan layanan lainnya.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## 🚀 Panduan Memulai (Getting Started)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Karena proyek ini dikonfigurasi dengan FVM (Flutter Version Management) dan Melos, ikuti langkah berikut untuk setup di komputer Anda:
+
+### 1. Prasyarat
+Pastikan Anda sudah menginstal alat berikut di komputer Anda:
+- [FVM](https://fvm.app/docs/getting_started/installation) untuk manajemen versi Flutter.
+
+### 2. Setup & Sinkronisasi
+Buka terminal di dalam folder proyek ini, lalu jalankan perintah berikut:
+
+```bash
+# 1. Unduh/gunakan versi Flutter yang sesuai dengan konfigurasi tim
+fvm install
+fvm use
+
+# 2. Sinkronisasikan semua dependensi package di seluruh workspace
+fvm flutter pub get
+fvm dart run melos bs
+```
+
+### 3. Jalankan Aplikasi
+Setelah proses sinkronisasi (bootstrap) selesai, Anda dapat menjalankan aplikasi seperti biasa:
+
+```bash
+fvm flutter run
+```
+
+## 📝 Aturan Kontribusi & Changelog
+
+Tim proyek ini dianjurkan menggunakan format **Conventional Commits** setiap kali melakukan perubahan (contoh: `feat: tambah halaman login`, `fix: perbaiki tombol error`, `docs: perbarui readme`).
+
+Hal ini bertujuan agar ke depannya Melos dapat men-generate dokumentasi `CHANGELOG.md` secara otomatis setiap kali ada rilis versi baru.

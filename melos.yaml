@@ -1,0 +1,6 @@
+name: tbcare_workspace
+
+packages:
+  - "packages/**"
+
+
