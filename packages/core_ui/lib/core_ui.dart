@@ -17,3 +17,4 @@ export 'src/theme/app_theme.dart';
 
 // -- Widgets --
 export 'src/widgets/tb_care_bottom_navbar.dart';
+export 'src/widgets/section_header.dart';

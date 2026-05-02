@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e4372d0-7e5c-4d53-9e5c-3a249ccfcd1f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.dart_tool/extension_discovery/vs_code.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/extension_discovery/vs_code.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/package_graph.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_graph.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/beranda/presentation/pages/beranda_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/beranda/presentation/pages/beranda_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core_ui/lib/core_ui.dart" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core_ui/lib/core_ui.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core_ui/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core_ui/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core_ui/test/core_ui_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core_ui/test/core_ui_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core_ui/lib/src/theme/app_colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core_ui/lib/src/theme/app_colors.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/test/widget_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +64,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "dev",
+    "git-widget-placeholder": "feature/beranda",
     "io.flutter.project.isFirstOpen": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
