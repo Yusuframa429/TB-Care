@@ -10,6 +10,16 @@ Proyek ini menggunakan **Melos** dan fitur bawaan *Dart Workspaces* untuk mengel
 - `/packages/core_ui`: Package khusus untuk komponen UI visual (tombol, input, warna, tema) yang dapat digunakan ulang.
 - `/packages/core_services`: Package khusus untuk logika bisnis, integrasi API, database lokal, dan layanan lainnya.
 
+## ✨ Fitur Utama (Core Features)
+
+1. **Beranda & Edukasi**: Dashboard utama menampilkan status kesehatan, pengingat obat, kepatuhan, serta artikel edukasi TBC terpercaya.
+2. **Profil Pengguna**: Manajemen data akun, riwayat pemeriksaan, status kesehatan keluarga, dan pengaturan privasi bersertifikat aman.
+3. **Cek AI (Expert System TBC)**: 
+   - Modul skrining TBC berbasis kecerdasan buatan (Logika Sistem Pakar).
+   - Chatbot interaktif untuk mengumpulkan 10 parameter klinis (Gejala, Komorbid, Durasi).
+   - Diimplementasikan dengan pola **Clean Architecture** (memisahkan `domain` logic dan `presentation` UI).
+   - Menghasilkan tingkat risiko akurat beserta rekomendasi pemeriksaan ke Fasyankes terdekat.
+
 ## 🚀 Panduan Memulai (Getting Started)
 
 Karena proyek ini dikonfigurasi dengan FVM (Flutter Version Management) dan Melos, ikuti langkah berikut untuk setup di komputer Anda:
