@@ -9,6 +9,15 @@ Format pencatatan ini didasarkan pada standar [Keep a Changelog](https://keepach
 ## [Unreleased]
 
 ### Added (Ditambahkan)
+- **Fitur Beranda (Home):** Header dinamis, statistik kesehatan, kartu pengingat obat, kepatuhan obat, section edukasi, dan "Tahukah Anda?".
+- **Fitur Profil:** Tampilan halaman profil lengkap dengan header data pengguna (avatar, status, stats), kartu darurat (Emergency SOS), menu pengaturan & privasi, dan informasi "AI Certified" by Kemenkes RI.
+- **Fitur Cek AI (Expert System TBC):**
+  - Antarmuka *Chat-based* AI Asisten menggunakan `StatefulWidget`.
+  - Implementasi **Clean Architecture** (Domain: *Entities*, *Use Cases*; Data: *Data Sources*; Presentation: *UI Widgets*).
+  - Skrining TBC berbasis 10 pertanyaan medis berbobot (Gejala Utama, Gejala Sekunder, Faktor Risiko, Durasi).
+  - *Safety Rules / Algoritma Keamanan* klinis (mendeteksi Trias Klasik TBC, Komorbid HIV/DM).
+  - Klasifikasi risiko otomatis (Rendah, Sedang, Tinggi) dan rujukan *Fasyankes* / chat dengan dokter spesialis.
+  - Halaman `HasilPemeriksaanPage` interaktif yang merangkum level risiko dan gejala terdeteksi.
 - Inisialisasi proyek Flutter utama `tb_care`.
 - Setup arsitektur Modular/Monorepo menggunakan pustaka **Melos** dan Dart Workspaces.
 - Pembuatan package `packages/core_ui` untuk menyimpan seluruh komponen antarmuka yang dapat digunakan berulang (reusable UI).
