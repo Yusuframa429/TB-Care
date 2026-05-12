@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'riwayat_pemeriksaan_page.dart';
 import 'package:core_ui/core_ui.dart';
 
 import '../widgets/profil_header.dart';
@@ -56,6 +58,14 @@ class ProfilPage extends StatelessWidget {
                   iconBgColor: AppColors.primaryLight,
                   title: 'Riwayat Pemeriksaan',
                   subtitle: 'Download laporan PDF',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const RiwayatPemeriksaanPage(),
+                      ),
+                    );
+                  },
                 ),
                 ProfilMenuItem(
                   icon: Icons.people_outline_rounded,

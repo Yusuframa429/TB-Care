@@ -9,7 +9,7 @@
 /// ```dart
 /// import 'package:core_ui/core_ui.dart';
 /// ```
-library core_ui;
+library;
 
 // -- Theme --
 export 'src/theme/app_colors.dart';
