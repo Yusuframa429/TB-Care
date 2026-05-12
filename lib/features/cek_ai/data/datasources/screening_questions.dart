@@ -19,7 +19,7 @@ const List<ScreeningQuestion> screeningQuestions = [
     options: [
       QuestionOption(text: 'Tidak', score: 0, shortText: 'Batuk berdahak/berdarah'),
       QuestionOption(text: 'Ya, dahak biasa', score: 1, shortText: 'Batuk berdahak/berdarah'),
-      QuestionOption(text: 'Ya, berdarah/karat', score: 3, shortText: 'Batuk berdahak/berdarah'),
+      QuestionOption(text: 'Ya, bercampur darah', score: 3, shortText: 'Batuk berdahak/berdarah'),
     ],
   ),
   ScreeningQuestion(
@@ -58,6 +58,15 @@ const List<ScreeningQuestion> screeningQuestions = [
       QuestionOption(text: 'Tidak', score: 0, shortText: 'Lemas/mudah lelah'),
       QuestionOption(text: 'Ya, sesekali', score: 1, shortText: 'Lemas/mudah lelah'),
       QuestionOption(text: 'Ya, hampir setiap hari', score: 2, shortText: 'Lemas/mudah lelah'),
+    ],
+  ),
+  ScreeningQuestion(
+    id: 'G7',
+    text: 'Apakah Anda mengalami sesak nafas atau nyeri dada saat menarik nafas dalam?',
+    options: [
+      QuestionOption(text: 'Tidak', score: 0, shortText: 'Sesak nafas/nyeri dada'),
+      QuestionOption(text: 'Ya, sesak nafas saat beraktivitas', score: 2, shortText: 'Sesak nafas/nyeri dada'),
+      QuestionOption(text: 'Ya, nyeri dada tajam', score: 2, shortText: 'Sesak nafas/nyeri dada'),
     ],
   ),
 

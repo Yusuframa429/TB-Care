@@ -23,7 +23,7 @@ class CalculateScreeningResult {
 
     // Klasifikasi Risiko Dasar
     RiskLevel risk = RiskLevel.low;
-    if (totalScore >= 7) {
+    if (totalScore >= 5) {
       risk = RiskLevel.high;
     } else if (totalScore >= 4) {
       risk = RiskLevel.medium;
@@ -35,6 +35,7 @@ class CalculateScreeningResult {
     int g3Score = answers['G3']?.score ?? 0;
     int g4Score = answers['G4']?.score ?? 0;
     int g5Score = answers['G5']?.score ?? 0;
+    int g7Score = answers['G7']?.score ?? 0;
     int r2Score = answers['R2']?.score ?? 0;
 
     // Rule 1: G1 == 3 (batuk >3 minggu) DAN G2 >= 1 (dahak) -> Naik 1 tingkat
@@ -68,6 +69,7 @@ class CalculateScreeningResult {
         g3Score == 0 &&
         g4Score == 0 &&
         g5Score == 0 &&
+        g7Score == 0 &&
         (answers['G6']?.score ?? 0) == 0;
     
     if (allSymptomsZero) {
