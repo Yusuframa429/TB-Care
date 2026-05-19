@@ -8,6 +8,7 @@ import '../widgets/pengingat_obat_card.dart';
 import '../widgets/kepatuhan_obat_card.dart';
 import '../widgets/edukasi_section.dart';
 import '../widgets/tahukah_anda_card.dart';
+import 'edukasi_list_page.dart';
 
 /// [BerandaPage] - Halaman utama (Home) aplikasi TB Care.
 ///
@@ -69,7 +70,16 @@ class BerandaPage extends StatelessWidget {
             const SizedBox(height: 24),
 
             /// Section edukasi & artikel.
-            const EdukasiSection(),
+            EdukasiSection(
+              onSemuaArtikel: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const EdukasiListPage(),
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 20),
 
             /// Kartu fakta "Tahukah Anda?".
