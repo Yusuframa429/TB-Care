@@ -15,18 +15,18 @@ class JadwalObatRepositoryImpl implements JadwalObatRepository {
 
   @override
   Future<void> saveJadwal(JadwalObat jadwal) async {
-    final model = JadwalObatModel.fromEntity(jadwal);
-    await _datasource.saveJadwal(model);
+    // TODO: Implementasikan dengan Hive jika akan digunakan.
+    // Tim saat ini menggunakan ObatRepository dengan SharedPreferences.
   }
 
   @override
   Future<List<JadwalObat>> getAllJadwal() async {
-    final models = await _datasource.getAllJadwal();
-    return models.map((model) => model.toEntity()).toList();
+    // TODO: Implementasikan dengan Hive jika akan digunakan.
+    return [];
   }
 
   @override
   Future<void> deleteJadwal(String id) async {
-    await _datasource.deleteJadwal(id);
+    // TODO: Implementasikan dengan Hive jika akan digunakan.
   }
 }

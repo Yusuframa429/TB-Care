@@ -1,34 +1,16 @@
-import 'package:hive_flutter/hive_flutter.dart';
-
-import '../models/jadwal_obat_model.dart';
-
-/// [ObatLocalDatasource] - Sumber data lokal menggunakan Hive.
+/// [ObatLocalDatasource] - Stub datasource lokal untuk jadwal obat.
 ///
-/// Bertanggung jawab untuk operasi CRUD langsung ke Hive box.
-/// Hive box harus sudah dibuka sebelum class ini digunakan
-/// (dilakukan di [main.dart]).
+/// Catatan: Tim memilih menggunakan [ObatRepository] dengan SharedPreferences
+/// sebagai penyimpanan utama. File ini dipertahankan sebagai referensi
+/// arsitektur Clean Architecture untuk implementasi Hive di masa depan.
+///
+/// TODO: Implementasikan dengan Hive jika akan digunakan kembali:
+/// ```yaml
+/// # pubspec.yaml
+/// hive: ^2.2.3
+/// hive_flutter: ^1.1.0
+/// ```
 class ObatLocalDatasource {
-  /// Nama box Hive untuk jadwal obat.
+  /// Nama box yang akan digunakan jika menggunakan Hive.
   static const String boxName = 'jadwal_obat';
-
-  /// Getter untuk mengakses box Hive yang sudah terbuka.
-  Box get _box => Hive.box(boxName);
-
-  /// Menyimpan jadwal obat ke Hive.
-  /// Key yang digunakan adalah [model.id] agar mudah di-update/hapus.
-  Future<void> saveJadwal(JadwalObatModel model) async {
-    await _box.put(model.id, model.toMap());
-  }
-
-  /// Mengambil semua jadwal obat dari Hive.
-  Future<List<JadwalObatModel>> getAllJadwal() async {
-    return _box.values
-        .map((value) => JadwalObatModel.fromMap(value as Map))
-        .toList();
-  }
-
-  /// Menghapus jadwal obat berdasarkan [id].
-  Future<void> deleteJadwal(String id) async {
-    await _box.delete(id);
-  }
 }
