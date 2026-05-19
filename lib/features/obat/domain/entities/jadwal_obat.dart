@@ -1,59 +1,52 @@
-import 'dart:convert';
-
-/// [JadwalObat] - Entity yang merepresentasikan satu jadwal obat.
+/// [JadwalObat] - Entity murni untuk jadwal minum obat.
 ///
-/// Setiap JadwalObat mewakili satu jenis obat dengan jadwal
-/// waktu minumnya. Misalnya: Rifampicin diminum jam 08:00 dan 20:00.
+/// Layer domain tidak mengenal Hive, database, atau Flutter.
+/// Hanya berisi data dan tidak ada dependency eksternal.
 class JadwalObat {
+  /// ID unik jadwal (epoch milliseconds sebagai string).
   final String id;
-  final String namaObat;
-  final int jumlahDosis;
-  final String satuanDosis;
-  final List<String> waktuMinum; // ["08:00", "20:00"]
-  final String kondisiMakan;
-  final String frekuensi;
-  final String? catatan;
 
-  JadwalObat({
+  /// Nama obat (misal: "Rifampicin").
+  final String namaObat;
+
+  /// Jumlah dosis (misal: "1").
+  final String dosis;
+
+  /// Satuan dosis (misal: "tablet", "kapsul").
+  final String satuanDosis;
+
+  /// List jam minum dalam format "HH:mm" (misal: ["08:00", "20:00"]).
+  final List<String> waktuMinum;
+
+  /// Kondisi makan ("Sebelum makan", "Saat makan", "Setelah makan").
+  final String kondisiMakan;
+
+  /// Frekuensi minum ("Setiap hari", "Setiap 2 hari", dll.).
+  final String frekuensi;
+
+  /// Status notifikasi aktif.
+  final bool isNotifikasiAktif;
+
+  /// Status getar aktif.
+  final bool isGetar;
+
+  /// Status suara aktif.
+  final bool isSuara;
+
+  /// Catatan tambahan (opsional).
+  final String catatan;
+
+  const JadwalObat({
     required this.id,
     required this.namaObat,
-    this.jumlahDosis = 1,
-    this.satuanDosis = 'tablet',
+    required this.dosis,
+    required this.satuanDosis,
     required this.waktuMinum,
-    this.kondisiMakan = 'Sebelum makan',
-    this.frekuensi = 'Setiap hari',
-    this.catatan,
+    required this.kondisiMakan,
+    required this.frekuensi,
+    required this.isNotifikasiAktif,
+    required this.isGetar,
+    required this.isSuara,
+    required this.catatan,
   });
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'namaObat': namaObat,
-        'jumlahDosis': jumlahDosis,
-        'satuanDosis': satuanDosis,
-        'waktuMinum': waktuMinum,
-        'kondisiMakan': kondisiMakan,
-        'frekuensi': frekuensi,
-        'catatan': catatan,
-      };
-
-  factory JadwalObat.fromJson(Map<String, dynamic> json) => JadwalObat(
-        id: json['id'] as String,
-        namaObat: json['namaObat'] as String,
-        jumlahDosis: json['jumlahDosis'] as int? ?? 1,
-        satuanDosis: json['satuanDosis'] as String? ?? 'tablet',
-        waktuMinum: List<String>.from(json['waktuMinum'] as List),
-        kondisiMakan: json['kondisiMakan'] as String? ?? 'Sebelum makan',
-        frekuensi: json['frekuensi'] as String? ?? 'Setiap hari',
-        catatan: json['catatan'] as String?,
-      );
-
-  /// Encode list ke JSON string untuk SharedPreferences.
-  static String encodeList(List<JadwalObat> list) =>
-      jsonEncode(list.map((e) => e.toJson()).toList());
-
-  /// Decode JSON string ke list JadwalObat.
-  static List<JadwalObat> decodeList(String jsonStr) =>
-      (jsonDecode(jsonStr) as List)
-          .map((e) => JadwalObat.fromJson(e as Map<String, dynamic>))
-          .toList();
 }
