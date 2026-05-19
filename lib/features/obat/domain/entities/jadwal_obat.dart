@@ -1,30 +1,49 @@
 import 'dart:convert';
 
-/// [JadwalObat] - Entity yang merepresentasikan satu jadwal obat.
+/// [JadwalObat] - Entity murni untuk jadwal minum obat.
 ///
-/// Setiap JadwalObat mewakili satu jenis obat dengan jadwal
-/// waktu minumnya. Misalnya: Rifampicin diminum jam 08:00 dan 20:00.
+/// Digunakan oleh seluruh layer (domain, data, presentation).
+/// Menyertakan [encodeList] dan [decodeList] untuk serialisasi
+/// ke SharedPreferences.
 class JadwalObat {
+  /// ID unik jadwal (epoch milliseconds sebagai string).
   final String id;
+
+  /// Nama obat (misal: "Rifampicin").
   final String namaObat;
+
+  /// Jumlah dosis sebagai angka (misal: 1, 2).
   final int jumlahDosis;
+
+  /// Satuan dosis (misal: "tablet", "kapsul", "ml").
   final String satuanDosis;
-  final List<String> waktuMinum; // ["08:00", "20:00"]
+
+  /// List jam minum dalam format "HH:mm" (misal: ["08:00", "20:00"]).
+  final List<String> waktuMinum;
+
+  /// Kondisi makan ("Sebelum makan", "Saat makan", "Setelah makan").
   final String kondisiMakan;
-  final String frekuensi;
+
+  /// Frekuensi minum ("Setiap hari", "Setiap 2 hari", dll.) — opsional.
+  final String? frekuensi;
+
+  /// Catatan tambahan dari pengguna — opsional.
   final String? catatan;
 
-  JadwalObat({
+  const JadwalObat({
     required this.id,
     required this.namaObat,
-    this.jumlahDosis = 1,
-    this.satuanDosis = 'tablet',
+    required this.jumlahDosis,
+    required this.satuanDosis,
     required this.waktuMinum,
-    this.kondisiMakan = 'Sebelum makan',
-    this.frekuensi = 'Setiap hari',
+    required this.kondisiMakan,
+    this.frekuensi,
     this.catatan,
   });
 
+  // ── Serialisasi ────────────────────────────────────────────
+
+  /// Konversi entity ke Map (untuk disimpan ke SharedPreferences / JSON).
   Map<String, dynamic> toJson() => {
         'id': id,
         'namaObat': namaObat,
@@ -36,24 +55,25 @@ class JadwalObat {
         'catatan': catatan,
       };
 
+  /// Buat entity dari Map JSON (setelah dibaca dari SharedPreferences).
   factory JadwalObat.fromJson(Map<String, dynamic> json) => JadwalObat(
         id: json['id'] as String,
         namaObat: json['namaObat'] as String,
-        jumlahDosis: json['jumlahDosis'] as int? ?? 1,
-        satuanDosis: json['satuanDosis'] as String? ?? 'tablet',
+        jumlahDosis: (json['jumlahDosis'] as num).toInt(),
+        satuanDosis: json['satuanDosis'] as String,
         waktuMinum: List<String>.from(json['waktuMinum'] as List),
-        kondisiMakan: json['kondisiMakan'] as String? ?? 'Sebelum makan',
-        frekuensi: json['frekuensi'] as String? ?? 'Setiap hari',
+        kondisiMakan: json['kondisiMakan'] as String,
+        frekuensi: json['frekuensi'] as String?,
         catatan: json['catatan'] as String?,
       );
 
-  /// Encode list ke JSON string untuk SharedPreferences.
+  /// Enkode list jadwal ke String JSON (untuk disimpan ke SharedPreferences).
   static String encodeList(List<JadwalObat> list) =>
-      jsonEncode(list.map((e) => e.toJson()).toList());
+      jsonEncode(list.map((j) => j.toJson()).toList());
 
-  /// Decode JSON string ke list JadwalObat.
-  static List<JadwalObat> decodeList(String jsonStr) =>
-      (jsonDecode(jsonStr) as List)
-          .map((e) => JadwalObat.fromJson(e as Map<String, dynamic>))
+  /// Dekode String JSON menjadi list jadwal (setelah dibaca dari SharedPreferences).
+  static List<JadwalObat> decodeList(String str) =>
+      (jsonDecode(str) as List)
+          .map((j) => JadwalObat.fromJson(j as Map<String, dynamic>))
           .toList();
 }
