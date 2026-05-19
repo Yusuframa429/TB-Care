@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:core_ui/core_ui.dart';
 
+import '../../data/obat_repository.dart';
+import '../../domain/entities/jadwal_obat.dart';
+
 import '../widgets/waktu_minum_selector.dart';
 import '../widgets/frekuensi_dropdown.dart';
 import '../widgets/pengingat_toggle_group.dart';
@@ -72,24 +75,44 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
   }
 
   /// Dipanggil saat tombol "Simpan Jadwal" ditekan.
-  /// Validasi form, lalu tampilkan snackbar konfirmasi (belum ke storage).
-  void _simpanJadwal() {
+  /// Validasi form, simpan ke repository, lalu kembali ke halaman sebelumnya.
+  Future<void> _simpanJadwal() async {
     if (!_formKey.currentState!.validate()) return;
     if (_waktuMinumList.isEmpty) {
       _showErrorSnackbar('Tambahkan minimal satu waktu minum obat.');
       return;
     }
 
-    // TODO: Sambungkan ke use case SaveJadwalObat saat domain & data layer siap.
+    // Konversi TimeOfDay list ke format string "HH:mm".
+    final waktuStrings = _waktuMinumList.map((t) {
+      return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+    }).toList();
+
+    final jadwal = JadwalObat(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      namaObat: _namaObatController.text.trim(),
+      jumlahDosis: int.tryParse(_jumlahDosisController.text) ?? 1,
+      satuanDosis: _satuanDosis,
+      waktuMinum: waktuStrings,
+      kondisiMakan: _kondisiMakan,
+      frekuensi: _frekuensi,
+      catatan: _catatanController.text.trim().isEmpty
+          ? null
+          : _catatanController.text.trim(),
+    );
+
+    await ObatRepository.instance.simpanJadwal(jadwal);
+
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Jadwal obat berhasil disimpan!'),
+        content: const Text('✅ Jadwal obat berhasil disimpan!'),
         backgroundColor: AppColors.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 
   void _showErrorSnackbar(String message) {
