@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 import '../../data/artikel_data.dart';
 import '../../domain/entities/artikel.dart';
@@ -270,10 +269,19 @@ class _ArtikelListCard extends StatelessWidget {
     required this.onTap,
   });
 
+  /// Format tanggal ke Bahasa Indonesia tanpa package intl.
+  static String _formatTanggal(DateTime date) {
+    const bulan = [
+      '', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des',
+    ];
+    return '${date.day} ${bulan[date.month]} ${date.year}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final style = kategoriStyles[artikel.kategori];
-    final dateStr = DateFormat('d MMM yyyy', 'id_ID').format(artikel.tanggalPublikasi);
+    final dateStr = _formatTanggal(artikel.tanggalPublikasi);
 
     return GestureDetector(
       onTap: onTap,
