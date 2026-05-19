@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 
+import '../../../obat/data/obat_repository.dart';
 import '../widgets/beranda_header.dart';
 import '../widgets/cek_ai_card.dart';
 import '../widgets/riwayat_kesehatan_section.dart';
@@ -17,15 +18,72 @@ import 'edukasi_list_page.dart';
 /// - Header dengan sapaan dinamis dan info pengguna
 /// - Kartu fitur Cek AI
 /// - Riwayat kesehatan (statistik)
-/// - Pengingat obat
-/// - Kepatuhan obat (progress bar)
+/// - Pengingat obat (data live dari [ObatRepository])
+/// - Kepatuhan obat (data live dari [ObatRepository])
 /// - Edukasi & artikel
 /// - Fakta menarik "Tahukah Anda?"
-///
-/// Saat ini menggunakan data dummy. Akan diganti dengan data
-/// dari API/backend saat sudah tersedia.
-class BerandaPage extends StatelessWidget {
+class BerandaPage extends StatefulWidget {
   const BerandaPage({super.key});
+
+  @override
+  State<BerandaPage> createState() => BerandaPageState();
+}
+
+class BerandaPageState extends State<BerandaPage> {
+  final ObatRepository _repo = ObatRepository.instance;
+  bool _loading = true;
+
+  // ── Data live dari ObatRepository ──
+  int _kepatuhanPersen = 0;
+  int _streak = 0;
+  String _pengingatTitle = 'Pengingat Obat';
+  String _pengingatTime = '--:--';
+  bool _pengingatIsTaken = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  /// Muat data dari ObatRepository (singleton, shared dengan ObatPage).
+  Future<void> _loadData() async {
+    await _repo.init();
+    _recalculate();
+    if (mounted) setState(() => _loading = false);
+  }
+
+  /// Dipanggil oleh [MainShell] saat user kembali ke tab Beranda.
+  /// Memastikan data kepatuhan dan pengingat selalu sinkron.
+  void refreshData() {
+    _recalculate();
+    if (mounted) setState(() {});
+  }
+
+  /// Hitung ulang data kepatuhan & pengingat dari repository.
+  void _recalculate() {
+    _kepatuhanPersen = _repo.getKepatuhanPersen();
+    _streak = _repo.getStreak();
+
+    // Cari sesi berikutnya yang belum diminum hari ini.
+    final sesiHariIni = _repo.getSesiHariIni();
+    final sesiBelum = sesiHariIni.where(
+      (s) => s['sudahMinum'] == false,
+    );
+
+    if (sesiBelum.isNotEmpty) {
+      final next = sesiBelum.first;
+      _pengingatTitle = next['namaSesi'] as String;
+      _pengingatTime = next['waktu'] as String;
+      _pengingatIsTaken = false;
+    } else if (sesiHariIni.isNotEmpty) {
+      // Semua sudah diminum hari ini.
+      final last = sesiHariIni.last;
+      _pengingatTitle = last['namaSesi'] as String;
+      _pengingatTime = last['waktu'] as String;
+      _pengingatIsTaken = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,19 +112,23 @@ class BerandaPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            /// Kartu pengingat obat malam.
-            const PengingatObatCard(
-              title: 'Pengingat Obat Malam',
-              time: '20:00',
-              isTaken: false,
-            ),
+            /// Kartu pengingat obat — data live dari ObatRepository.
+            _loading
+                ? const SizedBox.shrink()
+                : PengingatObatCard(
+                    title: _pengingatTitle,
+                    time: _pengingatTime,
+                    isTaken: _pengingatIsTaken,
+                  ),
             const SizedBox(height: 16),
 
-            /// Kartu kepatuhan obat dengan progress bar.
-            const KepatuhanObatCard(
-              percentage: 96,
-              streakDays: 14,
-            ),
+            /// Kartu kepatuhan obat — data live dari ObatRepository.
+            _loading
+                ? const SizedBox.shrink()
+                : KepatuhanObatCard(
+                    percentage: _kepatuhanPersen.toDouble(),
+                    streakDays: _streak,
+                  ),
             const SizedBox(height: 24),
 
             /// Section edukasi & artikel.
