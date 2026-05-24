@@ -48,7 +48,7 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
 
   // --- State form ---
   String _satuanDosis = 'tablet';
-  List<TimeOfDay> _waktuMinumList = [];
+  final List<TimeOfDay> _waktuMinumList = [];
   String _kondisiMakan = 'Sebelum makan';
   String _frekuensi = 'Setiap hari';
 
