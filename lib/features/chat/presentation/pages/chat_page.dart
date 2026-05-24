@@ -1,22 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:core_ui/core_ui.dart';
+
+import '../../data/gemini_service.dart';
+import '../../data/dokter_data.dart';
 
 import '../widgets/chat_header.dart';
-import '../widgets/chat_bubble.dart';
-import '../widgets/quick_reply_chip.dart';
+import '../widgets/chat_mode_toggle.dart';
+import '../widgets/chat_ai_bubble.dart';
+import '../widgets/chat_user_bubble.dart';
 import '../widgets/chat_input_bar.dart';
+import '../widgets/chat_typing_indicator.dart';
+import '../widgets/dokter_card.dart';
 
-/// [ChatPage] - Halaman Ngobrol Bareng AI.
+/// Model data untuk satu pesan dalam chat.
+class _ChatMessage {
+  /// `true` jika pesan dari AI, `false` jika dari user.
+  final bool isAi;
+
+  /// Isi teks pesan.
+  final String text;
+
+  /// Waktu pesan dikirim (format "HH:mm").
+  final String timestamp;
+
+  _ChatMessage({
+    required this.isAi,
+    required this.text,
+    required this.timestamp,
+  });
+}
+
+/// [ChatPage] - Halaman fitur chat dengan 2 mode:
 ///
-/// Halaman ini menampilkan antarmuka chat dengan asisten AI TBC.
-/// Terdiri dari:
-/// - Header: profil AI + toggle mode (AI / Chat Dokter)
-/// - Area chat: bubble pesan sambutan AI
-/// - Quick reply: saran pertanyaan cepat
-/// - Input bar: kolom ketik + tombol kirim
+/// 1. **Mode AI**: Chatbot interaktif menggunakan Google Gemini API
+///    untuk menjawab pertanyaan seputar TBC, pengobatan, dan pencegahan.
+///    Dilengkapi quick reply chips dan input teks manual.
 ///
- /// Halaman ini ditempatkan di tab ke-2 (Chat) pada [MainShell]
-/// dan tidak memiliki bottom navigation sendiri karena sudah
-/// disediakan oleh [TbCareBottomNavbar].
+/// 2. **Chat Dokter**: Daftar dokter spesialis paru/TBC yang tersedia
+///    untuk konsultasi via WhatsApp.
+///
+/// Halaman ini adalah tab utama di bottom navbar (indeks 2),
+/// sehingga tidak memiliki tombol back arrow.
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
@@ -25,101 +49,229 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final TextEditingController _inputController = TextEditingController();
+  // ── State ──────────────────────────────────────────────────
+
+  /// `true` = Mode AI aktif, `false` = Chat Dokter aktif.
+  bool _isAiMode = true;
+
+  /// Riwayat pesan chat AI.
+  final List<_ChatMessage> _messages = [];
+
+  /// Controller untuk input field.
+  final TextEditingController _textController = TextEditingController();
+
+  /// Controller untuk auto-scroll ke pesan terbaru.
+  final ScrollController _scrollController = ScrollController();
+
+  /// Service Gemini AI.
+  final GeminiService _gemini = GeminiService.instance;
+
+  /// Apakah AI sedang memproses respons.
+  bool _isTyping = false;
+
+  // ── Lifecycle ──────────────────────────────────────────────
+
+  @override
+  void initState() {
+    super.initState();
+    // Tambahkan pesan sambutan AI saat pertama kali dibuka.
+    _addWelcomeMessage();
+  }
 
   @override
   void dispose() {
-    _inputController.dispose();
+    _textController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  /// Placeholder untuk tombol kirim / submit.
-  void _onSendMessage() {
-    final text = _inputController.text.trim();
-    if (text.isEmpty) return;
-    // TODO: Kirim pesan ke AI dan tampilkan respons.
-    _inputController.clear();
+  // ── Welcome Message ────────────────────────────────────────
+
+  /// Menambahkan pesan sambutan otomatis dari AI.
+  void _addWelcomeMessage() {
+    _messages.add(_ChatMessage(
+      isAi: true,
+      text: 'Halo! Saya asisten AI kesehatan TBC. '
+          'Saya siap membantu menjawab pertanyaan seputar TBC, '
+          'pengobatan, dan pencegahannya. '
+          'Ada yang bisa saya bantu?',
+      timestamp: _currentTime(),
+    ));
   }
 
-  /// Placeholder untuk quick reply chip.
-  void _onQuickReply(String query) {
-    // TODO: Kirim query ke AI dan tampilkan respons.
+  // ── Chat Actions ───────────────────────────────────────────
+
+  /// Kirim pesan dari user dan dapatkan respons dari Gemini AI.
+  Future<void> _sendMessage(String text) async {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty || _isTyping) return;
+
+    // Tambahkan pesan user ke chat.
+    setState(() {
+      _messages.add(_ChatMessage(
+        isAi: false,
+        text: trimmed,
+        timestamp: _currentTime(),
+      ));
+      _isTyping = true;
+    });
+
+    _textController.clear();
+    _scrollToBottom();
+
+    // Kirim ke Gemini dan tunggu respons.
+    final response = await _gemini.sendMessage(trimmed);
+
+    if (!mounted) return;
+
+    setState(() {
+      _messages.add(_ChatMessage(
+        isAi: true,
+        text: response,
+        timestamp: _currentTime(),
+      ));
+      _isTyping = false;
+    });
+
+    _scrollToBottom();
   }
+
+  /// Handler saat user menekan tombol send.
+  void _onSend() {
+    _sendMessage(_textController.text);
+  }
+
+  /// Handler saat user menekan quick reply chip.
+  void _onQuickReply(String text) {
+    _sendMessage(text);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────
+
+  /// Mendapatkan waktu saat ini dalam format "HH:mm".
+  String _currentTime() {
+    final now = DateTime.now();
+    return '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+  }
+
+  /// Scroll ke pesan terbaru di bawah.
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent + 200,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  // ── Build ──────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      // Header menggunakan PreferredSize agar tidak ikut di-scroll.
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(108),
-        child: ChatHeader(),
-      ),
+      backgroundColor: AppColors.background,
       body: Column(
         children: [
-          // Area chat — mengisi sisa ruang.
-          Expanded(child: _buildChatArea()),
+          /// Header dinamis (judul berubah sesuai mode).
+          ChatHeader(isAiMode: _isAiMode),
 
-          // Saran pertanyaan cepat (horizontal scroll).
-          _buildQuickReplies(),
-
-          // Kolom input pesan.
-          ChatInputBar(
-            controller: _inputController,
-            onSend: _onSendMessage,
+          /// Toggle pill Mode AI ↔ Chat Dokter.
+          ChatModeToggle(
+            isAiMode: _isAiMode,
+            onModeChanged: (isAi) {
+              setState(() => _isAiMode = isAi);
+            },
           ),
+
+          /// Konten utama sesuai mode.
+          Expanded(
+            child: _isAiMode ? _buildAiChatView() : _buildDokterView(),
+          ),
+
+          /// Input bar hanya tampil di Mode AI.
+          if (_isAiMode)
+            ChatInputBar(
+              controller: _textController,
+              onSend: _onSend,
+              onQuickReply: _onQuickReply,
+              // Quick replies hanya muncul saat baru 1 pesan (sambutan).
+              showQuickReplies: _messages.length <= 1,
+              isLoading: _isTyping,
+            ),
         ],
       ),
     );
   }
 
-  /// Area percakapan yang berisi bubble chat AI.
-  Widget _buildChatArea() {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      children: [
-        ChatBubble(
-          message:
-              'Halo! Saya asisten AI kesehatan TBC. Saya siap membantu '
-              'menjawab pertanyaan seputar TBC, pengobatan, dan '
-              'pencegahannya. Ada yang bisa saya bantu?',
-          timestamp: '14:02',
-        ),
-      ],
+  // ── Mode AI: Chat View ─────────────────────────────────────
+
+  /// Membangun tampilan chat AI (daftar pesan + typing indicator).
+  Widget _buildAiChatView() {
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      // +1 untuk typing indicator (jika sedang mengetik).
+      itemCount: _messages.length + (_isTyping ? 1 : 0),
+      itemBuilder: (context, index) {
+        // Item terakhir = typing indicator (jika sedang mengetik).
+        if (_isTyping && index == _messages.length) {
+          return const Padding(
+            padding: EdgeInsets.only(bottom: 16),
+            child: ChatTypingIndicator(),
+          );
+        }
+
+        final msg = _messages[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: msg.isAi
+              ? ChatAiBubble(
+                  message: msg.text,
+                  timestamp: msg.timestamp,
+                )
+              : ChatUserBubble(
+                  message: msg.text,
+                  timestamp: msg.timestamp,
+                ),
+        );
+      },
     );
   }
 
-  /// Baris saran pertanyaan cepat dalam [SingleChildScrollView] horizontal.
-  Widget _buildQuickReplies() {
-    final queries = [
-      'Apa itu TBC?',
-      'Cara pencegahan TBC',
-      'Jadwal minum obat',
-      'Efek samping obat',
-    ];
+  // ── Mode Dokter: Daftar Dokter ─────────────────────────────
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 8.8, horizontal: 16),
-      decoration: const ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 0.80, color: Color(0xFFF1F5F9)),
-        ),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: queries.map((q) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: QuickReplyChip(
-                label: q,
-                onTap: () => _onQuickReply(q),
+  /// Membangun tampilan daftar dokter untuk konsultasi WhatsApp.
+  Widget _buildDokterView() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Label "Pilih Dokter".
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Pilih Dokter',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary.withValues(alpha: 0.8),
               ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          /// Daftar kartu dokter.
+          ...daftarDokter.map((dokter) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: DokterCard(dokter: dokter),
             );
-          }).toList(),
-        ),
+          }),
+        ],
       ),
     );
   }

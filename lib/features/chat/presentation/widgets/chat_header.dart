@@ -1,174 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:core_ui/core_ui.dart';
 
-/// [ChatHeader] - Header halaman chat berisi profil AI dan toggle mode.
+/// [ChatHeader] - Header putih untuk halaman Chat.
 ///
-/// Menampilkan avatar AI, nama, status "Aktif 24/7",
-/// serta dua tombol toggle: Mode AI (aktif) dan Chat Dokter (non-aktif).
+/// Menampilkan judul dan subtitle yang berubah secara dinamis
+/// berdasarkan mode yang sedang aktif (AI atau Dokter).
+///
+/// Parameter:
+/// - [isAiMode]: `true` jika Mode AI aktif, `false` jika Chat Dokter.
 class ChatHeader extends StatelessWidget {
-  const ChatHeader({super.key});
+  /// `true` = Mode AI, `false` = Chat Dokter.
+  final bool isAiMode;
+
+  const ChatHeader({super.key, required this.isAiMode});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 0.8),
-      decoration: const ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 0.80, color: Color(0xFFF1F5F9)),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildProfileRow(),
-          const SizedBox(height: 12),
-          _buildToggleButtons(),
-          const SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-
-  /// Baris profil: avatar + nama + status online.
-  Widget _buildProfileRow() {
-    return Row(
-      children: [
-        // Avatar AI
-        Container(
-          width: 32,
-          height: 32,
-          decoration: const ShapeDecoration(
-            color: Color(0xFFF1F5F9),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(999)),
-            ),
-          ),
-          child: const Icon(Icons.auto_awesome, size: 18, color: Color(0xFF059669)),
-        ),
-        const SizedBox(width: 12),
-        // Nama & status
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      color: AppColors.white,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
+          child: Row(
             children: [
-              const Text(
-                'AI Asisten TBC',
-                style: TextStyle(
-                  color: Color(0xFF1D293D),
-                  fontSize: 15,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                  height: 1.50,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: const ShapeDecoration(
-                      color: Color(0xFF00C950),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(999)),
+              /// Judul dan subtitle.
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isAiMode ? 'AI Asisten TBC' : 'Konsultasi Dokter',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    'Aktif 24/7',
-                    style: TextStyle(
-                      color: Color(0xFF90A1B9),
-                      fontSize: 11,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
+                    const SizedBox(height: 3),
+                    Row(
+                      children: [
+                        /// Dot indikator online (hijau).
+                        Container(
+                          width: 7,
+                          height: 7,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF4ADE80),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          isAiMode ? 'Aktif 24/7' : 'Dokter Online',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textSecondary.withValues(alpha: 0.8),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  /// Dua tombol toggle: Mode AI (active) dan Chat Dokter (inactive).
-  Widget _buildToggleButtons() {
-    return Row(
-      children: [
-        // Tombol Mode AI — aktif (gradient hijau)
-        Expanded(
-          child: _ToggleButton(
-            isActive: true,
-            icon: Icons.auto_awesome,
-            label: 'Mode AI',
-          ),
-        ),
-        const SizedBox(width: 8),
-        // Tombol Chat Dokter — non-aktif (abu-abu)
-        Expanded(
-          child: _ToggleButton(
-            isActive: false,
-            icon: Icons.local_hospital,
-            label: 'Chat Dokter',
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Widget internal untuk satu tombol toggle.
-class _ToggleButton extends StatelessWidget {
-  final bool isActive;
-  final IconData icon;
-  final String label;
-
-  const _ToggleButton({
-    required this.isActive,
-    required this.icon,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 32,
-      decoration: ShapeDecoration(
-        gradient: isActive
-            ? const LinearGradient(
-                begin: Alignment(0.00, 0.00),
-                end: Alignment(1.00, 1.00),
-                colors: [Color(0xFF059669), Color(0xFF14B8A6)],
-              )
-            : null,
-        color: isActive ? null : const Color(0xFFF1F5F9),
-        shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(999)),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 13,
-            color: isActive ? Colors.white : const Color(0xFF94A3B8),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isActive ? Colors.white : const Color(0xFF94A3B8),
-              fontSize: 12,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
-              height: 1.33,
-            ),
-          ),
-        ],
       ),
     );
   }

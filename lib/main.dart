@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app/main_shell.dart';
 
@@ -7,7 +8,19 @@ import 'app/main_shell.dart';
 ///
 /// Fungsi [main] adalah titik masuk pertama yang dijalankan oleh
 /// Flutter engine. Dari sini, seluruh widget tree aplikasi dibangun.
-void main() {
+Future<void> main() async {
+  // Memastikan binding Flutter terinisialisasi sebelum memuat .env
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    // Memuat file konfigurasi .env
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    // Tetap jalankan aplikasi walaupun .env tidak ada/gagal dimuat,
+    // error akan ditangani secara anggun oleh GeminiService.
+    debugPrint("Warning: Gagal memuat file .env: $e");
+  }
+
   runApp(const TbCareApp());
 }
 
