@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
 import '../domain/entities/jadwal_obat.dart';
 
@@ -41,16 +41,18 @@ class ObatRepository {
   /// Inisialisasi repository. Harus dipanggil sekali sebelum digunakan.
   Future<void> init() async {
     if (_initialized) return;
-    final prefs = await SharedPreferences.getInstance();
+    
+    // Buka box Hive untuk data obat
+    final box = await Hive.openBox('hive_obat_data');
 
     // Load jadwal
-    final jadwalStr = prefs.getString(_keyJadwal);
+    final jadwalStr = box.get(_keyJadwal) as String?;
     if (jadwalStr != null) {
       _jadwalList = JadwalObat.decodeList(jadwalStr);
     }
 
     // Load riwayat
-    final riwayatStr = prefs.getString(_keyRiwayat);
+    final riwayatStr = box.get(_keyRiwayat) as String?;
     if (riwayatStr != null) {
       _riwayat = Map<String, bool>.from(
         jsonDecode(riwayatStr) as Map<String, dynamic>,
@@ -58,16 +60,16 @@ class ObatRepository {
     }
 
     // Load tanggal mulai
-    final tglStr = prefs.getString(_keyTglMulai);
+    final tglStr = box.get(_keyTglMulai) as String?;
     if (tglStr != null) {
       _tanggalMulai = DateTime.parse(tglStr);
     }
-    _totalHari = prefs.getInt(_keyTotalHari) ?? 180;
+    _totalHari = box.get(_keyTotalHari) as int? ?? 180;
 
     // Seed data awal jika belum pernah
-    final seeded = prefs.getBool(_keySeeded) ?? false;
+    final seeded = box.get(_keySeeded) as bool? ?? false;
     if (!seeded) {
-      await _seedInitialData(prefs);
+      await _seedInitialData(box);
     }
 
     _initialized = true;
@@ -77,7 +79,7 @@ class ObatRepository {
 
   /// Mengisi data awal agar aplikasi tidak terlihat kosong
   /// pada pemakaian pertama.
-  Future<void> _seedInitialData(SharedPreferences prefs) async {
+  Future<void> _seedInitialData(Box box) async {
     _tanggalMulai = DateTime.now().subtract(const Duration(days: 14));
     _totalHari = 180;
 
@@ -127,18 +129,18 @@ class ObatRepository {
       }
     }
 
-    await _persist(prefs);
-    await prefs.setBool(_keySeeded, true);
+    await _persist(box);
+    await box.put(_keySeeded, true);
   }
 
   // ── Persistence ────────────────────────────────────────────
 
-  Future<void> _persist([SharedPreferences? p]) async {
-    final prefs = p ?? await SharedPreferences.getInstance();
-    await prefs.setString(_keyJadwal, JadwalObat.encodeList(_jadwalList));
-    await prefs.setString(_keyRiwayat, jsonEncode(_riwayat));
-    await prefs.setString(_keyTglMulai, _tanggalMulai.toIso8601String());
-    await prefs.setInt(_keyTotalHari, _totalHari);
+  Future<void> _persist([Box? b]) async {
+    final box = b ?? Hive.box('hive_obat_data');
+    await box.put(_keyJadwal, JadwalObat.encodeList(_jadwalList));
+    await box.put(_keyRiwayat, jsonEncode(_riwayat));
+    await box.put(_keyTglMulai, _tanggalMulai.toIso8601String());
+    await box.put(_keyTotalHari, _totalHari);
   }
 
   // ── CRUD Jadwal ────────────────────────────────────────────

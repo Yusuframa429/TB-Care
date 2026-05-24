@@ -3,6 +3,8 @@ import 'package:core_ui/core_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/dokter_data.dart';
+import '../../../profil/data/models/riwayat_pemeriksaan_model.dart';
+import '../../../profil/data/repositories/riwayat_pemeriksaan_repository.dart';
 
 /// [DokterCard] - Kartu informasi dokter untuk mode Chat Dokter.
 ///
@@ -25,6 +27,23 @@ class DokterCard extends StatelessWidget {
     );
 
     if (await canLaunchUrl(url)) {
+      // Simpan riwayat konsultasi ke database lokal
+      try {
+        final now = DateTime.now();
+        final id = 'konsul_${now.millisecondsSinceEpoch}';
+        final riwayat = RiwayatPemeriksaanModel(
+          id: id,
+          type: 'Konsultasi',
+          date: now,
+          status: 'Selesai',
+          description: dokter.nama,
+          actionLabel: 'Lihat Rekaman',
+        );
+        await RiwayatPemeriksaanRepository.instance.addRiwayat(riwayat);
+      } catch (e) {
+        debugPrint("Gagal menyimpan riwayat konsultasi: $e");
+      }
+
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       if (context.mounted) {

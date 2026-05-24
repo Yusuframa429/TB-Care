@@ -6,6 +6,9 @@ import '../../domain/usecases/calculate_screening_result.dart';
 import '../../data/datasources/screening_questions.dart';
 import 'hasil_pemeriksaan_page.dart';
 
+import '../../../profil/data/models/riwayat_pemeriksaan_model.dart';
+import '../../../profil/data/repositories/riwayat_pemeriksaan_repository.dart';
+
 import '../widgets/cek_ai_header.dart';
 import '../widgets/cek_ai_step_indicator.dart';
 import '../widgets/cek_ai_message_bubble.dart';
@@ -98,6 +101,20 @@ class _CekAiPageState extends State<CekAiPage> {
     if (!mounted) return;
 
     final result = _calculateResult(_answers);
+
+    // Simpan hasil skrining AI ke database lokal secara permanen
+    try {
+      final now = DateTime.now();
+      final id = 'ai_${now.millisecondsSinceEpoch}';
+      final riwayat = RiwayatPemeriksaanModel.fromScreeningResult(
+        id: id,
+        result: result,
+        date: now,
+      );
+      await RiwayatPemeriksaanRepository.instance.addRiwayat(riwayat);
+    } catch (e) {
+      debugPrint("Gagal menyimpan riwayat skrining AI: $e");
+    }
     
     // Reset state jika user kembali dari halaman hasil
     setState(() {
@@ -107,6 +124,8 @@ class _CekAiPageState extends State<CekAiPage> {
       _isAnalyzing = false;
       _addAiQuestion();
     });
+
+    if (!mounted) return;
 
     Navigator.push(
       context,

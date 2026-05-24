@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app/main_shell.dart';
 
@@ -11,6 +12,9 @@ import 'app/main_shell.dart';
 Future<void> main() async {
   // Memastikan binding Flutter terinisialisasi sebelum memuat .env
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Inisialisasi database Hive lokal untuk Flutter
+  await Hive.initFlutter();
 
   try {
     // Memuat file konfigurasi .env
