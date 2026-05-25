@@ -52,9 +52,9 @@ final List<Artikel> artikelList = [
     deskripsi:
         'Kenali tanda-tanda TBC sejak dini untuk penanganan yang tepat dan efektif di rumah',
     imageUrl:
-        'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=400&fit=crop',
+        'https://images.alodokter.com/dk0z4ums3/image/upload/v1595912411/attached_image/tuberkulosis-0-alodokter.jpg',
     kategori: 'Pencegahan',
-    linkArtikel: 'https://tbindonesia.or.id/informasi/tentang-tbc/apa-itu-tbc/',
+    linkArtikel: 'https://www.alodokter.com/tuberkulosis',
     tanggalPublikasi: DateTime(2026, 5, 18),
     waktuBacaMenit: 3,
   ),
