@@ -1,12 +1,9 @@
 import 'dart:convert';
-import 'package:hive/hive.dart';
+import 'package:core_services/core_services.dart';
 
 import '../models/riwayat_pemeriksaan_model.dart';
 
 /// [RiwayatPemeriksaanRepository] - Repository untuk mengelola riwayat pemeriksaan lokal.
-///
-/// Menggunakan [Hive] sebagai database lokal untuk kinerja maksimal dan konsistensi.
-/// Sesuai instruksi pengguna, database ini dimulai dari keadaan kosong (tanpa data awal/seed).
 class RiwayatPemeriksaanRepository {
   // ── Singleton ──────────────────────────────────────────────
   static final RiwayatPemeriksaanRepository instance =
@@ -14,7 +11,11 @@ class RiwayatPemeriksaanRepository {
   RiwayatPemeriksaanRepository._();
 
   // ── Storage Key ────────────────────────────────────────────
+  static const String _boxName = 'hive_riwayat_pemeriksaan';
   static const String _keyRiwayatList = 'riwayat_pemeriksaan_list';
+
+  // ── Services ───────────────────────────────────────────────
+  final StorageService _storage = StorageService.instance;
 
   // ── In-Memory Cache ────────────────────────────────────────
   List<RiwayatPemeriksaanModel> _riwayatList = [];
@@ -23,14 +24,11 @@ class RiwayatPemeriksaanRepository {
   /// Dapatkan list riwayat ter-cache secara sinkron (hanya valid setelah [init] dipanggil).
   List<RiwayatPemeriksaanModel> get riwayatList => List.unmodifiable(_riwayatList);
 
-  /// Inisialisasi repository. Memuat riwayat pemeriksaan dari Box Hive.
+  /// Inisialisasi repository. Memuat riwayat pemeriksaan dari StorageService.
   Future<void> init() async {
     if (_initialized) return;
     
-    // Buka Box Hive khusus untuk riwayat pemeriksaan
-    final box = await Hive.openBox('hive_riwayat_pemeriksaan');
-
-    final riwayatStr = box.get(_keyRiwayatList) as String?;
+    final riwayatStr = await _storage.get<String>(_boxName, _keyRiwayatList);
     if (riwayatStr != null) {
       try {
         final List<dynamic> decoded = jsonDecode(riwayatStr) as List;
@@ -42,7 +40,6 @@ class RiwayatPemeriksaanRepository {
         _riwayatList = [];
       }
     } else {
-      // Mulai dari kosong sesuai permintaan pengguna (no seeding)
       _riwayatList = [];
     }
 
@@ -55,11 +52,11 @@ class RiwayatPemeriksaanRepository {
     _riwayatList.sort((a, b) => b.date.compareTo(a.date));
   }
 
-  /// Simpan riwayat terbaru ke Box Hive.
-  Future<void> _saveToPrefs(Box box) async {
+  /// Simpan riwayat terbaru ke StorageService.
+  Future<void> _saveToStorage() async {
     final String encoded =
         jsonEncode(_riwayatList.map((item) => item.toJson()).toList());
-    await box.put(_keyRiwayatList, encoded);
+    await _storage.put(_boxName, _keyRiwayatList, encoded);
   }
 
   /// Dapatkan semua riwayat pemeriksaan.
@@ -72,19 +69,16 @@ class RiwayatPemeriksaanRepository {
   Future<void> addRiwayat(RiwayatPemeriksaanModel model) async {
     await init();
 
-    // Hapus duplikat ID jika tidak sengaja ada
     _riwayatList.removeWhere((item) => item.id == model.id);
     _riwayatList.add(model);
     _sortRiwayat();
 
-    final box = Hive.box('hive_riwayat_pemeriksaan');
-    await _saveToPrefs(box);
+    await _saveToStorage();
   }
 
   /// Hapus seluruh riwayat pemeriksaan lokal.
   Future<void> clearAll() async {
     _riwayatList.clear();
-    final box = await Hive.openBox('hive_riwayat_pemeriksaan');
-    await box.delete(_keyRiwayatList);
+    await _storage.delete(_boxName, _keyRiwayatList);
   }
 }

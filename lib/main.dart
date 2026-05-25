@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:core_services/core_services.dart';
 
 import 'app/main_shell.dart';
 
 /// Entry point aplikasi TB Care.
-///
-/// Fungsi [main] adalah titik masuk pertama yang dijalankan oleh
-/// Flutter engine. Dari sini, seluruh widget tree aplikasi dibangun.
 Future<void> main() async {
-  // Memastikan binding Flutter terinisialisasi sebelum memuat .env
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inisialisasi database Hive lokal untuk Flutter
-  await Hive.initFlutter();
+  // Inisialisasi Service Core
+  await StorageService.instance.init();
+  await EnvService.instance.init();
 
-  try {
-    // Memuat file konfigurasi .env
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    // Tetap jalankan aplikasi walaupun .env tidak ada/gagal dimuat,
-    // error akan ditangani secara anggun oleh GeminiService.
-    debugPrint("Warning: Gagal memuat file .env: $e");
-  }
+  // Registrasi Global Services ke ServiceLocator
+  final sl = ServiceLocator.instance;
+  sl.register<StorageService>(StorageService.instance);
+  sl.register<EnvService>(EnvService.instance);
+  sl.register<AIClient>(AIClient.instance);
+  sl.register<NetworkService>(NetworkService());
 
   runApp(const TbCareApp());
 }

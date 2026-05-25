@@ -1,58 +1,46 @@
 import 'dart:convert';
-
-import 'package:hive/hive.dart';
+import 'package:core_services/core_services.dart';
 
 import '../domain/entities/jadwal_obat.dart';
 
 /// [ObatRepository] - Repository untuk mengelola seluruh data obat.
-///
-/// Menggunakan SharedPreferences sebagai penyimpanan lokal.
-/// Singleton agar data konsisten di seluruh halaman.
-///
-/// Menyediakan:
-/// - CRUD jadwal obat
-/// - Pencatatan riwayat minum (per tanggal + waktu)
-/// - Perhitungan statistik, streak, pencapaian, dan status mingguan
 class ObatRepository {
   // ── Singleton ──────────────────────────────────────────────
   static final ObatRepository instance = ObatRepository._();
   ObatRepository._();
 
-  // ── Storage keys ───────────────────────────────────────────
+  // ── Storage Keys ───────────────────────────────────────────
+  static const _boxName = 'hive_obat_data';
   static const _keyJadwal = 'obat_jadwal_list';
   static const _keyRiwayat = 'obat_riwayat_map';
   static const _keyTglMulai = 'obat_tgl_mulai';
   static const _keyTotalHari = 'obat_total_hari';
   static const _keySeeded = 'obat_seeded';
 
+  // ── Services ───────────────────────────────────────────────
+  final StorageService _storage = StorageService.instance;
+
   // ── In-memory cache ────────────────────────────────────────
   List<JadwalObat> _jadwalList = [];
-
-  /// Riwayat minum: key = "2026-05-19_08:00", value = true (sudah minum).
   Map<String, bool> _riwayat = {};
-
   DateTime _tanggalMulai = DateTime.now();
   int _totalHari = 180;
-
   bool _initialized = false;
 
   // ── Init ───────────────────────────────────────────────────
 
-  /// Inisialisasi repository. Harus dipanggil sekali sebelum digunakan.
+  /// Inisialisasi repository.
   Future<void> init() async {
     if (_initialized) return;
     
-    // Buka box Hive untuk data obat
-    final box = await Hive.openBox('hive_obat_data');
-
     // Load jadwal
-    final jadwalStr = box.get(_keyJadwal) as String?;
+    final jadwalStr = await _storage.get<String>(_boxName, _keyJadwal);
     if (jadwalStr != null) {
       _jadwalList = JadwalObat.decodeList(jadwalStr);
     }
 
     // Load riwayat
-    final riwayatStr = box.get(_keyRiwayat) as String?;
+    final riwayatStr = await _storage.get<String>(_boxName, _keyRiwayat);
     if (riwayatStr != null) {
       _riwayat = Map<String, bool>.from(
         jsonDecode(riwayatStr) as Map<String, dynamic>,
@@ -60,16 +48,16 @@ class ObatRepository {
     }
 
     // Load tanggal mulai
-    final tglStr = box.get(_keyTglMulai) as String?;
+    final tglStr = await _storage.get<String>(_boxName, _keyTglMulai);
     if (tglStr != null) {
       _tanggalMulai = DateTime.parse(tglStr);
     }
-    _totalHari = box.get(_keyTotalHari) as int? ?? 180;
+    _totalHari = await _storage.get<int>(_boxName, _keyTotalHari) ?? 180;
 
     // Seed data awal jika belum pernah
-    final seeded = box.get(_keySeeded) as bool? ?? false;
+    final seeded = await _storage.get<bool>(_boxName, _keySeeded) ?? false;
     if (!seeded) {
-      await _seedInitialData(box);
+      await _seedInitialData();
     }
 
     _initialized = true;
@@ -77,9 +65,7 @@ class ObatRepository {
 
   // ── Seed Data ──────────────────────────────────────────────
 
-  /// Mengisi data awal agar aplikasi tidak terlihat kosong
-  /// pada pemakaian pertama.
-  Future<void> _seedInitialData(Box box) async {
+  Future<void> _seedInitialData() async {
     _tanggalMulai = DateTime.now().subtract(const Duration(days: 14));
     _totalHari = 180;
 
@@ -118,7 +104,6 @@ class ObatRepository {
       ),
     ];
 
-    // Seed riwayat: 13 hari lalu sampai kemarin semua diminum.
     _riwayat = {};
     final waktuSet = _getAllWaktu();
     for (int i = 1; i <= 13; i++) {
@@ -129,18 +114,17 @@ class ObatRepository {
       }
     }
 
-    await _persist(box);
-    await box.put(_keySeeded, true);
+    await _persist();
+    await _storage.put(_boxName, _keySeeded, true);
   }
 
   // ── Persistence ────────────────────────────────────────────
 
-  Future<void> _persist([Box? b]) async {
-    final box = b ?? Hive.box('hive_obat_data');
-    await box.put(_keyJadwal, JadwalObat.encodeList(_jadwalList));
-    await box.put(_keyRiwayat, jsonEncode(_riwayat));
-    await box.put(_keyTglMulai, _tanggalMulai.toIso8601String());
-    await box.put(_keyTotalHari, _totalHari);
+  Future<void> _persist() async {
+    await _storage.put(_boxName, _keyJadwal, JadwalObat.encodeList(_jadwalList));
+    await _storage.put(_boxName, _keyRiwayat, jsonEncode(_riwayat));
+    await _storage.put(_boxName, _keyTglMulai, _tanggalMulai.toIso8601String());
+    await _storage.put(_boxName, _keyTotalHari, _totalHari);
   }
 
   // ── CRUD Jadwal ────────────────────────────────────────────

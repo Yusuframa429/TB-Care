@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
+import 'package:core_services/core_services.dart';
 
-import '../../data/gemini_service.dart';
 import '../../data/dokter_data.dart';
 
 import '../widgets/chat_header.dart';
@@ -63,8 +63,8 @@ class _ChatPageState extends State<ChatPage> {
   /// Controller untuk auto-scroll ke pesan terbaru.
   final ScrollController _scrollController = ScrollController();
 
-  /// Service Gemini AI.
-  final GeminiService _gemini = GeminiService.instance;
+  /// Service AI Client.
+  final AIClient _aiClient = AIClient.instance;
 
   /// Apakah AI sedang memproses respons.
   bool _isTyping = false;
@@ -119,8 +119,8 @@ class _ChatPageState extends State<ChatPage> {
     _textController.clear();
     _scrollToBottom();
 
-    // Kirim ke Gemini dan tunggu respons.
-    final response = await _gemini.sendMessage(trimmed);
+    // Kirim ke AI dan tunggu respons.
+    final response = await _aiClient.sendMessage(trimmed);
 
     if (!mounted) return;
 
