@@ -20,6 +20,9 @@ class RiwayatPemeriksaanRepository {
   List<RiwayatPemeriksaanModel> _riwayatList = [];
   bool _initialized = false;
 
+  /// Dapatkan list riwayat ter-cache secara sinkron (hanya valid setelah [init] dipanggil).
+  List<RiwayatPemeriksaanModel> get riwayatList => List.unmodifiable(_riwayatList);
+
   /// Inisialisasi repository. Memuat riwayat pemeriksaan dari Box Hive.
   Future<void> init() async {
     if (_initialized) return;
