@@ -6,6 +6,8 @@ import '../widgets/hasil_risk_card.dart';
 import '../widgets/hasil_gejala_section.dart';
 import '../widgets/hasil_rekomendasi_card.dart';
 import '../widgets/hasil_konsultasi_card.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
 
 /// [HasilPemeriksaanPage] - Halaman hasil pemeriksaan Cek AI.
 class HasilPemeriksaanPage extends StatelessWidget {
@@ -87,8 +89,19 @@ class HasilPemeriksaanPage extends StatelessWidget {
             /// Kartu rekomendasi.
             HasilRekomendasiCard(
               message: recommendationText,
-              onCariTap: () {
-                // TODO: Navigasi ke pencarian fasyankes.
+              onCariTap: () async {
+                final uri = Uri.parse(
+                    'https://www.google.com/maps/search/?api=1&query=puskesmas');
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Tidak dapat membuka Google Maps')),
+                    );
+                  }
+                }
               },
             ),
             const SizedBox(height: 24),
@@ -96,7 +109,10 @@ class HasilPemeriksaanPage extends StatelessWidget {
             /// Section konsultasi dokter.
             HasilKonsultasiCard(
               onChatTap: () {
-                // TODO: Navigasi ke halaman chat dokter.
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ChatPage()),
+                );
               },
             ),
             const SizedBox(height: 24),
