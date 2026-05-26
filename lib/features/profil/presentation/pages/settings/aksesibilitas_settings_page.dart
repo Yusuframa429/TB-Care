@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:core_services/core_services.dart';
+import '../../../../main.dart';
 
 /// [AksesibilitasSettingsPage] - Halaman pengaturan aksesibilitas.
 class AksesibilitasSettingsPage extends StatefulWidget {
@@ -36,6 +37,7 @@ class _AksesibilitasSettingsPageState extends State<AksesibilitasSettingsPage> {
 
   Future<void> _saveSetting(double value) async {
     await _storage.put(_boxName, 'text_scale_factor', value);
+    globalTextScaleNotifier.value = value;
   }
 
   String _getScaleLabel() {
