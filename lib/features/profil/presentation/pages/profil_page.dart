@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'riwayat_pemeriksaan_page.dart';
 import 'manajemen_keluarga_page.dart';
+import 'settings/notifikasi_settings_page.dart';
+import 'settings/aksesibilitas_settings_page.dart';
 import 'package:core_ui/core_ui.dart';
 
 import '../widgets/profil_header.dart';
@@ -142,6 +144,14 @@ class _ProfilPageState extends State<ProfilPage> {
                   iconBgColor: const Color(0xFFFFF3E0),
                   title: 'Notifikasi',
                   subtitle: 'Aktif — Pengingat obat',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const NotifikasiSettingsPage(),
+                      ),
+                    );
+                  },
                 ),
                 ProfilMenuItem(
                   icon: Icons.accessibility_new_rounded,
@@ -149,6 +159,14 @@ class _ProfilPageState extends State<ProfilPage> {
                   iconBgColor: const Color(0xFFF3F4F6),
                   title: 'Aksesibilitas',
                   subtitle: 'Ukuran teks normal',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AksesibilitasSettingsPage(),
+                      ),
+                    );
+                  },
                 ),
                 ProfilMenuItem(
                   icon: Icons.language_rounded,

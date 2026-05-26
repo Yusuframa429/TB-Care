@@ -6,6 +6,9 @@ import 'app/main_shell.dart';
 import 'core/services/notification_service.dart';
 import 'features/obat/data/obat_repository.dart';
 
+/// Notifier global untuk mengatur ukuran teks secara langsung (real-time) di seluruh aplikasi.
+final ValueNotifier<double> globalTextScaleNotifier = ValueNotifier<double>(1.0);
+
 /// Entry point aplikasi TB Care.
 ///
 /// Fungsi [main] adalah titik masuk pertama yang dijalankan oleh
@@ -36,6 +39,12 @@ Future<void> main() async {
     // ── Inisialisasi Fitur Notifikasi & Jadwal Obat ───────────────
     await NotificationService.instance.init();
     await ObatRepository.instance.init();
+
+    // ── Ambil Pengaturan Aksesibilitas Terakhir ───────────────────
+    final savedScale = await StorageService.instance.get<double>('settings_box', 'text_scale_factor');
+    if (savedScale != null) {
+      globalTextScaleNotifier.value = savedScale;
+    }
 
     runApp(const TbCareApp());
   } catch (e, stacktrace) {
@@ -71,17 +80,32 @@ class TbCareApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TB Care',
-      debugShowCheckedModeBanner: false,
+    return ValueListenableBuilder<double>(
+      valueListenable: globalTextScaleNotifier,
+      builder: (context, textScale, child) {
+        return MaterialApp(
+          title: 'TB Care',
+          debugShowCheckedModeBanner: false,
 
-      /// Menggunakan tema yang sudah dikonfigurasi di core_ui
-      /// agar desain konsisten di seluruh aplikasi.
-      theme: AppTheme.lightTheme,
+          /// Menggunakan tema yang sudah dikonfigurasi di core_ui
+          /// agar desain konsisten di seluruh aplikasi.
+          theme: AppTheme.lightTheme,
 
-      /// [MainShell] berfungsi sebagai kerangka utama yang menampilkan
-      /// navbar dan halaman fitur di dalamnya.
-      home: const MainShell(),
+          /// Meng-override ukuran teks dasar untuk seluruh aplikasi
+          builder: (context, widget) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: TextScaler.linear(textScale),
+              ),
+              child: widget!,
+            );
+          },
+
+          /// [MainShell] berfungsi sebagai kerangka utama yang menampilkan
+          /// navbar dan halaman fitur di dalamnya.
+          home: const MainShell(),
+        );
+      },
     );
   }
 }
