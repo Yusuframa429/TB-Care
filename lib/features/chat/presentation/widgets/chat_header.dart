@@ -24,6 +24,16 @@ class ChatHeader extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
           child: Row(
             children: [
+              if (Navigator.canPop(context))
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
+                    onPressed: () => Navigator.pop(context),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ),
               /// Judul dan subtitle.
               Expanded(
                 child: Column(
