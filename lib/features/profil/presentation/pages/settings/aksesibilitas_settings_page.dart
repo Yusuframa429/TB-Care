@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:core_services/core_services.dart';
-import '../../../../main.dart';
+import 'package:tb_care/main.dart'; 
+
 
 /// [AksesibilitasSettingsPage] - Halaman pengaturan aksesibilitas.
 class AksesibilitasSettingsPage extends StatefulWidget {
