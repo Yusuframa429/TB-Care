@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'riwayat_pemeriksaan_page.dart';
 import 'settings/notifikasi_settings_page.dart';
+import 'settings/aksesibilitas_settings_page.dart';
 import 'package:core_ui/core_ui.dart';
 
 import '../widgets/profil_header.dart';
@@ -108,6 +109,14 @@ class ProfilPage extends StatelessWidget {
                   iconBgColor: const Color(0xFFF3F4F6),
                   title: 'Aksesibilitas',
                   subtitle: 'Ukuran teks normal',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AksesibilitasSettingsPage(),
+                      ),
+                    );
+                  },
                 ),
                 ProfilMenuItem(
                   icon: Icons.language_rounded,
