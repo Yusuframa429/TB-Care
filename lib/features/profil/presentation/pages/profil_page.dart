@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'riwayat_pemeriksaan_page.dart';
+import 'settings/notifikasi_settings_page.dart';
 import 'package:core_ui/core_ui.dart';
 
 import '../widgets/profil_header.dart';
@@ -92,6 +93,14 @@ class ProfilPage extends StatelessWidget {
                   iconBgColor: const Color(0xFFFFF3E0),
                   title: 'Notifikasi',
                   subtitle: 'Aktif — Pengingat obat',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const NotifikasiSettingsPage(),
+                      ),
+                    );
+                  },
                 ),
                 ProfilMenuItem(
                   icon: Icons.accessibility_new_rounded,
