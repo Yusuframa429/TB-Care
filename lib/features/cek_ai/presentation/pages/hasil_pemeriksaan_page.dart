@@ -7,7 +7,7 @@ import '../widgets/hasil_gejala_section.dart';
 import '../widgets/hasil_rekomendasi_card.dart';
 import '../widgets/hasil_konsultasi_card.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../chat/presentation/pages/chat_page.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
 
 /// [HasilPemeriksaanPage] - Halaman hasil pemeriksaan Cek AI.
 class HasilPemeriksaanPage extends StatelessWidget {
