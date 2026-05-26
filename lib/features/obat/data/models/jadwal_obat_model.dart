@@ -13,6 +13,9 @@ class JadwalObatModel {
   final String kondisiMakan;
   final String? frekuensi;
   final String? catatan;
+  final bool isNotifikasiAktif;
+  final bool isGetar;
+  final bool isSuara;
 
   const JadwalObatModel({
     required this.id,
@@ -23,6 +26,9 @@ class JadwalObatModel {
     required this.kondisiMakan,
     this.frekuensi,
     this.catatan,
+    this.isNotifikasiAktif = true,
+    this.isGetar = true,
+    this.isSuara = false,
   });
 
   factory JadwalObatModel.fromEntity(JadwalObat entity) => JadwalObatModel(
@@ -34,9 +40,12 @@ class JadwalObatModel {
         kondisiMakan: entity.kondisiMakan,
         frekuensi: entity.frekuensi,
         catatan: entity.catatan,
+        isNotifikasiAktif: entity.isNotifikasiAktif,
+        isGetar: entity.isGetar,
+        isSuara: entity.isSuara,
       );
 
-  factory JadwalObatModel.fromMap(Map<dynamic, dynamic> map) => JadwalObatModel(
+  factory JadwalObatModel.fromMap(Map<String, dynamic> map) => JadwalObatModel(
         id: map['id'] as String,
         namaObat: map['namaObat'] as String,
         jumlahDosis: (map['jumlahDosis'] as num).toInt(),
@@ -45,6 +54,9 @@ class JadwalObatModel {
         kondisiMakan: map['kondisiMakan'] as String,
         frekuensi: map['frekuensi'] as String?,
         catatan: map['catatan'] as String?,
+        isNotifikasiAktif: map['isNotifikasiAktif'] as bool? ?? true,
+        isGetar: map['isGetar'] as bool? ?? true,
+        isSuara: map['isSuara'] as bool? ?? false,
       );
 
   Map<String, dynamic> toMap() => {
@@ -56,6 +68,9 @@ class JadwalObatModel {
         'kondisiMakan': kondisiMakan,
         'frekuensi': frekuensi,
         'catatan': catatan,
+        'isNotifikasiAktif': isNotifikasiAktif,
+        'isGetar': isGetar,
+        'isSuara': isSuara,
       };
 
   JadwalObat toEntity() => JadwalObat(
@@ -67,5 +82,8 @@ class JadwalObatModel {
         kondisiMakan: kondisiMakan,
         frekuensi: frekuensi,
         catatan: catatan,
+        isNotifikasiAktif: isNotifikasiAktif,
+        isGetar: isGetar,
+        isSuara: isSuara,
       );
 }

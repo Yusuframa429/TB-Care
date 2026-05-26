@@ -1,7 +1,5 @@
 import '../../domain/entities/jadwal_obat.dart';
 import '../../domain/repositories/jadwal_obat_repository.dart';
-import '../datasources/obat_local_datasource.dart';
-import '../models/jadwal_obat_model.dart';
 
 /// [JadwalObatRepositoryImpl] - Implementasi konkret dari [JadwalObatRepository].
 ///
@@ -9,9 +7,7 @@ import '../models/jadwal_obat_model.dart';
 /// Domain layer hanya berinteraksi dengan interface [JadwalObatRepository],
 /// tidak mengenal class ini secara langsung.
 class JadwalObatRepositoryImpl implements JadwalObatRepository {
-  final ObatLocalDatasource _datasource;
-
-  JadwalObatRepositoryImpl(this._datasource);
+  JadwalObatRepositoryImpl();
 
   @override
   Future<void> saveJadwal(JadwalObat jadwal) async {

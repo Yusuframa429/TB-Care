@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:core_ui/core_ui.dart';
 
 /// [StreakCard] - Kartu motivasi yang menampilkan streak minum obat.
 ///

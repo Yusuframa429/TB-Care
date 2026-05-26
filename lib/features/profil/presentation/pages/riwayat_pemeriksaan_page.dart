@@ -4,13 +4,17 @@ import 'package:core_ui/core_ui.dart';
 import '../widgets/riwayat_filter_chips.dart';
 import '../widgets/riwayat_card.dart';
 
+import '../../data/models/riwayat_pemeriksaan_model.dart';
+import '../../data/repositories/riwayat_pemeriksaan_repository.dart';
+import '../../../cek_ai/presentation/pages/hasil_pemeriksaan_page.dart';
+
 /// [RiwayatPemeriksaanPage] - Halaman riwayat pemeriksaan pengguna.
 ///
 /// Menampilkan daftar riwayat pemeriksaan (AI Check dan Konsultasi)
 /// dalam bentuk card list dengan filter chip untuk memilah jenis
 /// pemeriksaan. Diakses dari menu "Riwayat Pemeriksaan" di halaman Profil.
 ///
-/// Saat ini menggunakan data statis/dummy.
+/// Data dimuat secara dinamis dari database lokal (SharedPreferences).
 class RiwayatPemeriksaanPage extends StatefulWidget {
   const RiwayatPemeriksaanPage({super.key});
 
@@ -24,51 +28,36 @@ class _RiwayatPemeriksaanPageState extends State<RiwayatPemeriksaanPage> {
   /// Nilai: 'Semua', 'AI Check', 'Konsultasi'.
   String _activeFilter = 'Semua';
 
-  /// Data dummy riwayat pemeriksaan.
-  final List<Map<String, dynamic>> _allRiwayat = const [
-    {
-      'type': 'AI Check',
-      'date': '23 Apr 2026',
-      'status': 'SEDANG',
-      'description': '3/6 gejala terdeteksi',
-      'actionLabel': 'Lihat Detail',
-    },
-    {
-      'type': 'Konsultasi',
-      'date': '20 Apr 2026',
-      'status': 'Selesai',
-      'description': 'Dr. Ahmad Fauzi',
-      'actionLabel': 'Lihat Rekaman',
-    },
-    {
-      'type': 'AI Check',
-      'date': '5 Apr 2026',
-      'status': 'RENDAH',
-      'description': '1/6 gejala terdeteksi',
-      'actionLabel': 'Lihat Detail',
-    },
-    {
-      'type': 'Konsultasi',
-      'date': '28 Mar 2026',
-      'status': 'Selesai',
-      'description': 'Dr. Siti Nurhaliza',
-      'actionLabel': 'Lihat Rekaman',
-    },
-    {
-      'type': 'AI Check',
-      'date': '10 Mar 2026',
-      'status': 'RENDAH',
-      'description': '0/6 gejala terdeteksi',
-      'actionLabel': 'Lihat Detail',
-    },
-  ];
+  /// Daftar riwayat pemeriksaan dari database lokal.
+  List<RiwayatPemeriksaanModel> _allRiwayat = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRiwayat();
+  }
+
+  /// Muat data riwayat pemeriksaan secara asinkron.
+  Future<void> _loadRiwayat() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final list = await RiwayatPemeriksaanRepository.instance.getRiwayatList();
+
+    setState(() {
+      _allRiwayat = list;
+      _isLoading = false;
+    });
+  }
 
   /// Mengembalikan list riwayat yang sudah difilter berdasarkan
   /// [_activeFilter].
-  List<Map<String, dynamic>> get _filteredRiwayat {
+  List<RiwayatPemeriksaanModel> get _filteredRiwayat {
     if (_activeFilter == 'Semua') return _allRiwayat;
     return _allRiwayat
-        .where((item) => item['type'] == _activeFilter)
+        .where((item) => item.type == _activeFilter)
         .toList();
   }
 
@@ -118,29 +107,60 @@ class _RiwayatPemeriksaanPageState extends State<RiwayatPemeriksaanPage> {
 
           /// Daftar riwayat pemeriksaan.
           Expanded(
-            child: _filteredRiwayat.isEmpty
-                ? _buildEmptyState()
-                : ListView.separated(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 16,
+            child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primary,
                     ),
-                    itemCount: _filteredRiwayat.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final item = _filteredRiwayat[index];
-                      return RiwayatCard(
-                        type: item['type'] as String,
-                        date: item['date'] as String,
-                        status: item['status'] as String,
-                        description: item['description'] as String,
-                        actionLabel: item['actionLabel'] as String,
-                        onActionTap: () {
-                          // TODO: Navigasi ke detail pemeriksaan.
-                        },
-                      );
-                    },
-                  ),
+                  )
+                : _filteredRiwayat.isEmpty
+                    ? _buildEmptyState()
+                    : RefreshIndicator(
+                        onRefresh: _loadRiwayat,
+                        color: AppColors.primary,
+                        child: ListView.separated(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                          itemCount: _filteredRiwayat.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final item = _filteredRiwayat[index];
+                            return RiwayatCard(
+                              type: item.type,
+                              date: item.formattedDate,
+                              status: item.status,
+                              description: item.description,
+                              actionLabel: item.actionLabel,
+                              onActionTap: () {
+                                if (item.type == 'AI Check') {
+                                  // Rekonstruksi hasil skrining AI ke entitas asli
+                                  final result = item.toScreeningResult();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => HasilPemeriksaanPage(result: result),
+                                    ),
+                                  );
+                                } else if (item.type == 'Konsultasi') {
+                                  // Berikan feedback konsultasi dokter
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Detail rekaman konsultasi dengan ${item.description}'),
+                                      backgroundColor: AppColors.primary,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
           ),
         ],
       ),

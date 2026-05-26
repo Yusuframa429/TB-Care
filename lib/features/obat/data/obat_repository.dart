@@ -1,56 +1,47 @@
 import 'dart:convert';
+import 'package:core_services/core_services.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../../core/services/notification_service.dart';
 import '../domain/entities/jadwal_obat.dart';
 
 /// [ObatRepository] - Repository untuk mengelola seluruh data obat.
-///
-/// Menggunakan SharedPreferences sebagai penyimpanan lokal.
-/// Singleton agar data konsisten di seluruh halaman.
-///
-/// Menyediakan:
-/// - CRUD jadwal obat
-/// - Pencatatan riwayat minum (per tanggal + waktu)
-/// - Perhitungan statistik, streak, pencapaian, dan status mingguan
 class ObatRepository {
   // ── Singleton ──────────────────────────────────────────────
   static final ObatRepository instance = ObatRepository._();
   ObatRepository._();
 
-  // ── Storage keys ───────────────────────────────────────────
+  // ── Storage Keys ───────────────────────────────────────────
+  static const _boxName = 'hive_obat_data';
   static const _keyJadwal = 'obat_jadwal_list';
   static const _keyRiwayat = 'obat_riwayat_map';
   static const _keyTglMulai = 'obat_tgl_mulai';
   static const _keyTotalHari = 'obat_total_hari';
   static const _keySeeded = 'obat_seeded';
 
+  // ── Services ───────────────────────────────────────────────
+  final StorageService _storage = StorageService.instance;
+
   // ── In-memory cache ────────────────────────────────────────
   List<JadwalObat> _jadwalList = [];
-
-  /// Riwayat minum: key = "2026-05-19_08:00", value = true (sudah minum).
   Map<String, bool> _riwayat = {};
-
   DateTime _tanggalMulai = DateTime.now();
   int _totalHari = 180;
-
   bool _initialized = false;
 
   // ── Init ───────────────────────────────────────────────────
 
-  /// Inisialisasi repository. Harus dipanggil sekali sebelum digunakan.
+  /// Inisialisasi repository.
   Future<void> init() async {
     if (_initialized) return;
-    final prefs = await SharedPreferences.getInstance();
-
+    
     // Load jadwal
-    final jadwalStr = prefs.getString(_keyJadwal);
+    final jadwalStr = await _storage.get<String>(_boxName, _keyJadwal);
     if (jadwalStr != null) {
       _jadwalList = JadwalObat.decodeList(jadwalStr);
     }
 
     // Load riwayat
-    final riwayatStr = prefs.getString(_keyRiwayat);
+    final riwayatStr = await _storage.get<String>(_boxName, _keyRiwayat);
     if (riwayatStr != null) {
       _riwayat = Map<String, bool>.from(
         jsonDecode(riwayatStr) as Map<String, dynamic>,
@@ -58,16 +49,16 @@ class ObatRepository {
     }
 
     // Load tanggal mulai
-    final tglStr = prefs.getString(_keyTglMulai);
+    final tglStr = await _storage.get<String>(_boxName, _keyTglMulai);
     if (tglStr != null) {
       _tanggalMulai = DateTime.parse(tglStr);
     }
-    _totalHari = prefs.getInt(_keyTotalHari) ?? 180;
+    _totalHari = await _storage.get<int>(_boxName, _keyTotalHari) ?? 180;
 
     // Seed data awal jika belum pernah
-    final seeded = prefs.getBool(_keySeeded) ?? false;
+    final seeded = await _storage.get<bool>(_boxName, _keySeeded) ?? false;
     if (!seeded) {
-      await _seedInitialData(prefs);
+      await _seedInitialData();
     }
 
     _initialized = true;
@@ -75,9 +66,7 @@ class ObatRepository {
 
   // ── Seed Data ──────────────────────────────────────────────
 
-  /// Mengisi data awal agar aplikasi tidak terlihat kosong
-  /// pada pemakaian pertama.
-  Future<void> _seedInitialData(SharedPreferences prefs) async {
+  Future<void> _seedInitialData() async {
     _tanggalMulai = DateTime.now().subtract(const Duration(days: 14));
     _totalHari = 180;
 
@@ -89,6 +78,9 @@ class ObatRepository {
         satuanDosis: 'kapsul',
         waktuMinum: ['08:00', '20:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false, // seed data: nonaktif agar tidak spam notif
+        isGetar: true,
+        isSuara: false,
       ),
       JadwalObat(
         id: 'seed_2',
@@ -97,6 +89,9 @@ class ObatRepository {
         satuanDosis: 'tablet',
         waktuMinum: ['08:00', '20:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false,
+        isGetar: true,
+        isSuara: false,
       ),
       JadwalObat(
         id: 'seed_3',
@@ -105,6 +100,9 @@ class ObatRepository {
         satuanDosis: 'tablet',
         waktuMinum: ['08:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false,
+        isGetar: true,
+        isSuara: false,
       ),
       JadwalObat(
         id: 'seed_4',
@@ -113,10 +111,12 @@ class ObatRepository {
         satuanDosis: 'tablet',
         waktuMinum: ['08:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false,
+        isGetar: true,
+        isSuara: false,
       ),
     ];
 
-    // Seed riwayat: 13 hari lalu sampai kemarin semua diminum.
     _riwayat = {};
     final waktuSet = _getAllWaktu();
     for (int i = 1; i <= 13; i++) {
@@ -127,18 +127,17 @@ class ObatRepository {
       }
     }
 
-    await _persist(prefs);
-    await prefs.setBool(_keySeeded, true);
+    await _persist();
+    await _storage.put(_boxName, _keySeeded, true);
   }
 
   // ── Persistence ────────────────────────────────────────────
 
-  Future<void> _persist([SharedPreferences? p]) async {
-    final prefs = p ?? await SharedPreferences.getInstance();
-    await prefs.setString(_keyJadwal, JadwalObat.encodeList(_jadwalList));
-    await prefs.setString(_keyRiwayat, jsonEncode(_riwayat));
-    await prefs.setString(_keyTglMulai, _tanggalMulai.toIso8601String());
-    await prefs.setInt(_keyTotalHari, _totalHari);
+  Future<void> _persist() async {
+    await _storage.put(_boxName, _keyJadwal, JadwalObat.encodeList(_jadwalList));
+    await _storage.put(_boxName, _keyRiwayat, jsonEncode(_riwayat));
+    await _storage.put(_boxName, _keyTglMulai, _tanggalMulai.toIso8601String());
+    await _storage.put(_boxName, _keyTotalHari, _totalHari);
   }
 
   // ── CRUD Jadwal ────────────────────────────────────────────
@@ -146,18 +145,26 @@ class ObatRepository {
   List<JadwalObat> getJadwalList() => List.unmodifiable(_jadwalList);
 
   Future<void> simpanJadwal(JadwalObat jadwal) async {
+    // Jika update (id sudah ada), batalkan notifikasi lama dulu.
     final idx = _jadwalList.indexWhere((j) => j.id == jadwal.id);
     if (idx >= 0) {
+      await NotificationService.instance.cancelForJadwal(jadwal.id);
       _jadwalList[idx] = jadwal;
     } else {
       _jadwalList.add(jadwal);
     }
     await _persist();
+
+    // Jadwalkan notifikasi berulang harian (hanya jika aktif).
+    await NotificationService.instance.scheduleForJadwal(jadwal);
   }
 
   Future<void> hapusJadwal(String id) async {
     _jadwalList.removeWhere((j) => j.id == id);
     await _persist();
+
+    // Batalkan semua notifikasi yang terkait dengan jadwal ini.
+    await NotificationService.instance.cancelForJadwal(id);
   }
 
   // ── Actions ────────────────────────────────────────────────
@@ -174,6 +181,12 @@ class ObatRepository {
     final key = '${_dateKey(DateTime.now())}_$waktu';
     _riwayat.remove(key);
     await _persist();
+  }
+
+  /// Cek status riwayat minum pada tanggal dan waktu tertentu.
+  /// [dateKey] format "yyyy-MM-dd", [waktu] format "HH:mm".
+  bool getRiwayatStatus(String dateKey, String waktu) {
+    return _riwayat['${dateKey}_$waktu'] == true;
   }
 
   // ── Query: Sesi Hari Ini ───────────────────────────────────
