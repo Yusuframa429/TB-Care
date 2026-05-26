@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
+import 'package:core_services/core_services.dart';
 
 /// [NotifikasiSettingsPage] - Halaman pengaturan notifikasi.
 class NotifikasiSettingsPage extends StatefulWidget {
@@ -10,10 +11,39 @@ class NotifikasiSettingsPage extends StatefulWidget {
 }
 
 class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
-  // State sederhana untuk switch (sementara belum terhubung ke database lokal)
+  final StorageService _storage = StorageService.instance;
+  final String _boxName = 'settings_box';
+
   bool _pengingatObat = true;
   bool _jadwalPemeriksaan = true;
   bool _tipsKesehatan = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final obat = await _storage.get<bool>(_boxName, 'notif_pengingat_obat');
+    final pemeriksaan = await _storage.get<bool>(_boxName, 'notif_jadwal_pemeriksaan');
+    final tips = await _storage.get<bool>(_boxName, 'notif_tips_kesehatan');
+
+    if (mounted) {
+      setState(() {
+        // Default bernilai true jika belum pernah disimpan (kecuali tips)
+        _pengingatObat = obat ?? true;
+        _jadwalPemeriksaan = pemeriksaan ?? true;
+        _tipsKesehatan = tips ?? false;
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _saveSetting(String key, bool value) async {
+    await _storage.put(_boxName, key, value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +66,9 @@ class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
         ),
         centerTitle: false,
       ),
-      body: SingleChildScrollView(
+      body: _isLoading 
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -65,7 +97,8 @@ class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
                       setState(() {
                         _pengingatObat = val;
                       });
-                      // TODO: Implementasi logika mematikan jadwal notifikasi
+                      _saveSetting('notif_pengingat_obat', val);
+                      // TODO: Implementasi logika mematikan jadwal notifikasi di OS
                     },
                   ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
@@ -84,6 +117,7 @@ class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
                       setState(() {
                         _jadwalPemeriksaan = val;
                       });
+                      _saveSetting('notif_jadwal_pemeriksaan', val);
                     },
                   ),
                 ],
@@ -112,6 +146,7 @@ class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
                   setState(() {
                     _tipsKesehatan = val;
                   });
+                  _saveSetting('notif_tips_kesehatan', val);
                 },
               ),
             ),
