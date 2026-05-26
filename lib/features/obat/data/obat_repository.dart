@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:core_services/core_services.dart';
 
+import '../../../core/services/notification_service.dart';
 import '../domain/entities/jadwal_obat.dart';
 
 /// [ObatRepository] - Repository untuk mengelola seluruh data obat.
@@ -77,6 +78,9 @@ class ObatRepository {
         satuanDosis: 'kapsul',
         waktuMinum: ['08:00', '20:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false, // seed data: nonaktif agar tidak spam notif
+        isGetar: true,
+        isSuara: false,
       ),
       JadwalObat(
         id: 'seed_2',
@@ -85,6 +89,9 @@ class ObatRepository {
         satuanDosis: 'tablet',
         waktuMinum: ['08:00', '20:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false,
+        isGetar: true,
+        isSuara: false,
       ),
       JadwalObat(
         id: 'seed_3',
@@ -93,6 +100,9 @@ class ObatRepository {
         satuanDosis: 'tablet',
         waktuMinum: ['08:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false,
+        isGetar: true,
+        isSuara: false,
       ),
       JadwalObat(
         id: 'seed_4',
@@ -101,6 +111,9 @@ class ObatRepository {
         satuanDosis: 'tablet',
         waktuMinum: ['08:00'],
         kondisiMakan: 'Sebelum makan',
+        isNotifikasiAktif: false,
+        isGetar: true,
+        isSuara: false,
       ),
     ];
 
@@ -132,18 +145,26 @@ class ObatRepository {
   List<JadwalObat> getJadwalList() => List.unmodifiable(_jadwalList);
 
   Future<void> simpanJadwal(JadwalObat jadwal) async {
+    // Jika update (id sudah ada), batalkan notifikasi lama dulu.
     final idx = _jadwalList.indexWhere((j) => j.id == jadwal.id);
     if (idx >= 0) {
+      await NotificationService.instance.cancelForJadwal(jadwal.id);
       _jadwalList[idx] = jadwal;
     } else {
       _jadwalList.add(jadwal);
     }
     await _persist();
+
+    // Jadwalkan notifikasi berulang harian (hanya jika aktif).
+    await NotificationService.instance.scheduleForJadwal(jadwal);
   }
 
   Future<void> hapusJadwal(String id) async {
     _jadwalList.removeWhere((j) => j.id == id);
     await _persist();
+
+    // Batalkan semua notifikasi yang terkait dengan jadwal ini.
+    await NotificationService.instance.cancelForJadwal(id);
   }
 
   // ── Actions ────────────────────────────────────────────────

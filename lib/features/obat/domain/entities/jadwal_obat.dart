@@ -30,6 +30,18 @@ class JadwalObat {
   /// Catatan tambahan dari pengguna — opsional.
   final String? catatan;
 
+  /// Apakah notifikasi aktif untuk jadwal ini.
+  /// Default: `true` agar pengingat langsung aktif saat jadwal dibuat.
+  final bool isNotifikasiAktif;
+
+  /// Apakah getar (vibration) aktif saat notifikasi muncul.
+  /// Hanya relevan jika [isNotifikasiAktif] bernilai `true`.
+  final bool isGetar;
+
+  /// Apakah suara (sound) aktif saat notifikasi muncul.
+  /// Hanya relevan jika [isNotifikasiAktif] bernilai `true`.
+  final bool isSuara;
+
   const JadwalObat({
     required this.id,
     required this.namaObat,
@@ -39,6 +51,9 @@ class JadwalObat {
     required this.kondisiMakan,
     this.frekuensi,
     this.catatan,
+    this.isNotifikasiAktif = true,
+    this.isGetar = true,
+    this.isSuara = false,
   });
 
   // ── Serialisasi ────────────────────────────────────────────
@@ -53,6 +68,9 @@ class JadwalObat {
         'kondisiMakan': kondisiMakan,
         'frekuensi': frekuensi,
         'catatan': catatan,
+        'isNotifikasiAktif': isNotifikasiAktif,
+        'isGetar': isGetar,
+        'isSuara': isSuara,
       };
 
   /// Buat entity dari Map JSON (setelah dibaca dari SharedPreferences).
@@ -65,6 +83,9 @@ class JadwalObat {
         kondisiMakan: json['kondisiMakan'] as String,
         frekuensi: json['frekuensi'] as String?,
         catatan: json['catatan'] as String?,
+        isNotifikasiAktif: json['isNotifikasiAktif'] as bool? ?? true,
+        isGetar: json['isGetar'] as bool? ?? true,
+        isSuara: json['isSuara'] as bool? ?? false,
       );
 
   /// Enkode list jadwal ke String JSON (untuk disimpan ke SharedPreferences).

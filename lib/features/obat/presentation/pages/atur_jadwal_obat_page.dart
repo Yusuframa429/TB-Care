@@ -99,6 +99,10 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
       catatan: _catatanController.text.trim().isEmpty
           ? null
           : _catatanController.text.trim(),
+      // ⚡ Kirim preferensi notifikasi dari toggle user.
+      isNotifikasiAktif: _isNotifikasiAktif,
+      isGetar: _isGetar,
+      isSuara: _isSuara,
     );
 
     await ObatRepository.instance.simpanJadwal(jadwal);

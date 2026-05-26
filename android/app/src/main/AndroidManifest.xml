@@ -1,4 +1,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- ════════════════════════════════════════════════════════════
+         Permission untuk Notifikasi & Penjadwalan Alarm
+         ════════════════════════════════════════════════════════════ -->
+
+    <!-- [WAJIB] Android 13+ (API 33+) — runtime permission notifikasi.
+         Dideklarasikan di sini + request di kode (NotificationService._requestPermissions). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <!-- [WAJIB] Untuk vibrasi saat notifikasi muncul. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- [RECOMMENDED] Agar notifikasi tetap muncul meskipun perangkat dalam
+         mode Doze / idle (Android 6+). -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+
+    <!-- [RECOMMENDED] Untuk penjadwalan alarm eksak di Android 12+.
+         Gunakan SCHEDULE_EXACT_ALARM jika memungkinkan, USE_EXACT_ALARM
+         sebagai cadangan untuk aplikasi dengan izin khusus (seperti pengingat obat). -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+
+    <!-- [OPTIONAL] Agar notifikasi yang sudah dijadwalkan tetap dikirim
+         setelah perangkat di-restart.
+         NOTE: Ini membutuhkan BroadcastReceiver tambahan; jika tidak dipasang,
+         notifikasi tidak akan hilang (fln menggunakan AlarmManager yang
+         persist di Android). -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <application
         android:label="tb_care"
         android:name="${applicationName}"
