@@ -39,8 +39,8 @@ Future<void> main() async {
 
     runApp(const TbCareApp());
   } catch (e, stacktrace) {
-    print("FATAL ERROR IN MAIN: $e");
-    print(stacktrace);
+    debugPrint("FATAL ERROR IN MAIN: $e");
+    debugPrint(stacktrace.toString());
     runApp(
       MaterialApp(
         home: Scaffold(

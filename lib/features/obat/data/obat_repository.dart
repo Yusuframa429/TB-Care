@@ -183,6 +183,12 @@ class ObatRepository {
     await _persist();
   }
 
+  /// Cek status riwayat minum pada tanggal dan waktu tertentu.
+  /// [dateKey] format "yyyy-MM-dd", [waktu] format "HH:mm".
+  bool getRiwayatStatus(String dateKey, String waktu) {
+    return _riwayat['${dateKey}_$waktu'] == true;
+  }
+
   // ── Query: Sesi Hari Ini ───────────────────────────────────
 
   /// Mengembalikan daftar sesi minum obat hari ini,
