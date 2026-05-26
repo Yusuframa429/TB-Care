@@ -13,8 +13,10 @@ import 'package:core_ui/core_ui.dart';
 /// - [namaSesi]: Nama sesi (misal: "Obat Pagi").
 /// - [daftarObat]: Nama-nama obat yang diminum.
 /// - [isSudahMinum]: Status apakah sudah minum.
+/// - [warnaSesi]: Warna ikon jam sesuai sesi.
 /// - [onSudahMinum]: Callback saat tombol "Sudah Minum" ditekan.
 /// - [onTunda]: Callback saat tombol "Tunda 30 min" ditekan.
+/// - [onTap]: Callback saat kartu ditekan untuk lihat detail.
 class JadwalHariIniCard extends StatelessWidget {
   /// Waktu minum dalam format "HH:mm".
   final String waktu;
@@ -37,6 +39,9 @@ class JadwalHariIniCard extends StatelessWidget {
   /// Callback saat tombol "Tunda 30 min" ditekan.
   final VoidCallback? onTunda;
 
+  /// Callback saat kartu ditekan untuk melihat detail obat.
+  final VoidCallback? onTap;
+
   const JadwalHariIniCard({
     super.key,
     required this.waktu,
@@ -46,11 +51,14 @@ class JadwalHariIniCard extends StatelessWidget {
     this.warnaSesi = AppColors.primary,
     this.onSudahMinum,
     this.onTunda,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -230,6 +238,7 @@ class JadwalHariIniCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
       ),
     );
   }

@@ -6,19 +6,28 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 ///
 /// Menampilkan progress bar persentase kepatuhan minum obat
 /// dan informasi streak berturut-turut.
+///
+/// Parameter:
+/// - [percentage]: Persentase kepatuhan (0-100).
+/// - [streakDays]: Jumlah hari berturut-turut minum obat.
+/// - [onTap]: Callback saat kartu ditekan untuk lihat detail kepatuhan.
 class KepatuhanObatCard extends StatelessWidget {
   final double percentage;
   final int streakDays;
+  final VoidCallback? onTap;
 
   const KepatuhanObatCard({
     super.key,
     required this.percentage,
     required this.streakDays,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -60,6 +69,7 @@ class KepatuhanObatCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

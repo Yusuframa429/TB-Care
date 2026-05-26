@@ -45,7 +45,7 @@ class JadwalObatModel {
         isSuara: entity.isSuara,
       );
 
-  factory JadwalObatModel.fromMap(Map<dynamic, dynamic> map) => JadwalObatModel(
+  factory JadwalObatModel.fromMap(Map<String, dynamic> map) => JadwalObatModel(
         id: map['id'] as String,
         namaObat: map['namaObat'] as String,
         jumlahDosis: (map['jumlahDosis'] as num).toInt(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'riwayat_pemeriksaan_page.dart';
+import 'manajemen_keluarga_page.dart';
 import 'settings/notifikasi_settings_page.dart';
 import 'settings/aksesibilitas_settings_page.dart';
 import 'package:core_ui/core_ui.dart';
@@ -9,6 +10,8 @@ import '../widgets/profil_header.dart';
 import '../widgets/emergency_sos_card.dart';
 import '../widgets/profil_menu_item.dart';
 import '../widgets/profil_footer.dart';
+import '../../data/models/family_member_model.dart';
+import '../../data/repositories/family_repository.dart';
 
 /// [ProfilPage] - Halaman profil pengguna.
 ///
@@ -16,30 +19,68 @@ import '../widgets/profil_footer.dart';
 /// pengobatan, kartu darurat SOS, menu kesehatan (riwayat
 /// pemeriksaan, manajemen keluarga), menu pengaturan (notifikasi,
 /// aksesibilitas, bahasa, privasi), serta opsi keluar akun.
-///
-/// Saat ini menggunakan data dummy. Akan diganti dengan data
-/// dari API/backend saat sudah tersedia.
-class ProfilPage extends StatelessWidget {
+class ProfilPage extends StatefulWidget {
   const ProfilPage({super.key});
 
   @override
+  State<ProfilPage> createState() => _ProfilPageState();
+}
+
+class _ProfilPageState extends State<ProfilPage> {
+  FamilyMemberModel? _activeMember;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadActiveMember();
+  }
+
+  /// Memuat profil pengguna/anggota keluarga yang sedang aktif.
+  Future<void> _loadActiveMember() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final member = await FamilyRepository.instance.getActiveMember();
+
+    setState(() {
+      _activeMember = member;
+      _isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(
+          child: CircularProgressIndicator(
+            color: AppColors.primary,
+          ),
+        ),
+      );
+    }
+
+    final member = _activeMember!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Header hijau dengan avatar, info user, dan stats.
-            const ProfilHeader(
-              userName: 'Budi Santoso',
-              userInitials: 'BS',
-              usia: '45 tahun',
+            /// Header hijau dengan avatar, info user, dan stats secara dinamis.
+            ProfilHeader(
+              userName: member.name,
+              userInitials: member.initials,
+              usia: '${member.age} tahun',
               lokasi: 'Jakarta Selatan',
-              status: 'Pasien Aktif',
-              hariPengobatan: 14,
-              kepatuhanPersen: 96,
-              konsultasi: 3,
+              status: member.status,
+              hariPengobatan: member.hariPengobatan,
+              kepatuhanPersen: member.kepatuhanPersen,
+              konsultasi: member.konsultasi,
             ),
             const SizedBox(height: 20),
 
@@ -74,8 +115,17 @@ class ProfilPage extends StatelessWidget {
                   iconColor: AppColors.primary,
                   iconBgColor: AppColors.primaryLight,
                   title: 'Manajemen Keluarga',
-                  subtitle: '2 anggota terdaftar',
+                  subtitle: 'Kelola anggota keluarga',
                   showDivider: false,
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ManajemenKeluargaPage(),
+                      ),
+                    );
+                    _loadActiveMember(); // Segarkan header profil saat kembali dari halaman manajemen
+                  },
                 ),
               ],
             ),
