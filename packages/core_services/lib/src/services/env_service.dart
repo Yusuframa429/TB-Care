@@ -17,4 +17,7 @@ class EnvService {
 
   /// Helper khusus untuk Gemini API Key.
   String get geminiApiKey => get('GEMINI_API_KEY');
+
+  /// Helper khusus untuk DeepSeek API Key.
+  String get deepseekApiKey => get('DEEPSEEK_API_KEY');
 }
