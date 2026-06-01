@@ -10,8 +10,8 @@ class RiwayatPemeriksaanRepository {
       RiwayatPemeriksaanRepository._();
   RiwayatPemeriksaanRepository._();
 
-  // ── Storage Key ────────────────────────────────────────────
-  static const String _boxName = 'hive_riwayat_pemeriksaan';
+  // ── Storage Keys ───────────────────────────────────────────
+  late String _boxName;
   static const String _keyRiwayatList = 'riwayat_pemeriksaan_list';
 
   // ── Services ───────────────────────────────────────────────
@@ -27,6 +27,9 @@ class RiwayatPemeriksaanRepository {
   /// Inisialisasi repository. Memuat riwayat pemeriksaan dari StorageService.
   Future<void> init() async {
     if (_initialized) return;
+
+    final currentUser = await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
+    _boxName = 'hive_riwayat_pemeriksaan_$currentUser';
     
     final riwayatStr = await _storage.get<String>(_boxName, _keyRiwayatList);
     if (riwayatStr != null) {
@@ -77,8 +80,15 @@ class RiwayatPemeriksaanRepository {
   }
 
   /// Hapus seluruh riwayat pemeriksaan lokal.
-  Future<void> clearAll() async {
+  Future<void> clearRiwayat() async {
+    await init();
     _riwayatList.clear();
     await _storage.delete(_boxName, _keyRiwayatList);
+  }
+
+  /// Menghapus cache memory ketika logout
+  void clearCache() {
+    _riwayatList = [];
+    _initialized = false;
   }
 }

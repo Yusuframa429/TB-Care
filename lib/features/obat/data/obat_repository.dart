@@ -11,7 +11,7 @@ class ObatRepository {
   ObatRepository._();
 
   // ── Storage Keys ───────────────────────────────────────────
-  static const _boxName = 'hive_obat_data';
+  late String _boxName;
   static const _keyJadwal = 'obat_jadwal_list';
   static const _keyRiwayat = 'obat_riwayat_map';
   static const _keyTglMulai = 'obat_tgl_mulai';
@@ -33,6 +33,9 @@ class ObatRepository {
   /// Inisialisasi repository.
   Future<void> init() async {
     if (_initialized) return;
+    
+    final currentUser = await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
+    _boxName = 'hive_obat_data_$currentUser';
     
     // Load jadwal
     final jadwalStr = await _storage.get<String>(_boxName, _keyJadwal);
@@ -467,5 +470,13 @@ class ObatRepository {
     if (hour < 12) return 'pagi';
     if (hour < 17) return 'siang';
     return 'malam';
+  }
+
+  /// Menghapus cache memory ketika logout
+  void clearCache() {
+    _jadwalList = [];
+    _riwayat = {};
+    _tanggalMulai = DateTime.now();
+    _initialized = false;
   }
 }

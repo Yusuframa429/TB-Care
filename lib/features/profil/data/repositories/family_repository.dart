@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:core_services/core_services.dart';
 
 import '../models/family_member_model.dart';
+import '../../../auth/data/auth_repository.dart';
 
 /// [FamilyRepository] - Repository untuk mengelola data anggota keluarga & status aktif user.
 class FamilyRepository {
@@ -10,7 +11,7 @@ class FamilyRepository {
   FamilyRepository._();
 
   // ── Storage Keys ───────────────────────────────────────────
-  static const String _boxName = 'hive_family_management';
+  late String _boxName;
   static const String _keyMemberList = 'family_member_list';
 
   // ── Services ───────────────────────────────────────────────
@@ -27,6 +28,9 @@ class FamilyRepository {
   Future<void> init() async {
     if (_initialized) return;
 
+    final currentUser = await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
+    _boxName = 'hive_family_management_$currentUser';
+
     final membersStr = await _storage.get<String>(_boxName, _keyMemberList);
     if (membersStr != null) {
       try {
@@ -40,6 +44,17 @@ class FamilyRepository {
     } else {
       await _loadDefaultData();
     }
+
+    // Selalu sinkronkan nama 'owner' dengan user yang sedang login
+    final userData = await AuthRepository.instance.getCurrentUserData();
+    final ownerName = userData != null ? userData['name'] as String : 'Pengguna';
+    
+    _members = _members.map((m) {
+      if (m.id == 'owner') {
+        return m.copyWith(name: ownerName);
+      }
+      return m;
+    }).toList();
 
     _initialized = true;
   }
@@ -135,5 +150,11 @@ class FamilyRepository {
     } else {
       await _saveToStorage();
     }
+  }
+
+  /// Menghapus cache memory ketika logout
+  void clearCache() {
+    _members = [];
+    _initialized = false;
   }
 }
