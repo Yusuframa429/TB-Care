@@ -67,7 +67,7 @@ class ObatRepository {
   // ── Seed Data ──────────────────────────────────────────────
 
   Future<void> _seedInitialData() async {
-    _tanggalMulai = DateTime.now().subtract(const Duration(days: 14));
+    _tanggalMulai = DateTime.now(); // Mulai dari hari ini
     _totalHari = 180;
 
     _jadwalList = [
@@ -117,15 +117,8 @@ class ObatRepository {
       ),
     ];
 
+    // Mulai dengan riwayat kosong (streak 0 hari)
     _riwayat = {};
-    final waktuSet = _getAllWaktu();
-    for (int i = 1; i <= 13; i++) {
-      final date = DateTime.now().subtract(Duration(days: i));
-      final dateKey = _dateKey(date);
-      for (final w in waktuSet) {
-        _riwayat['${dateKey}_$w'] = true;
-      }
-    }
 
     await _persist();
     await _storage.put(_boxName, _keySeeded, true);

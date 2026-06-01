@@ -1,5 +1,6 @@
 import '../../domain/entities/jadwal_obat.dart';
 import '../../domain/repositories/jadwal_obat_repository.dart';
+import '../obat_repository.dart';
 
 /// [JadwalObatRepositoryImpl] - Implementasi konkret dari [JadwalObatRepository].
 ///
@@ -11,18 +12,19 @@ class JadwalObatRepositoryImpl implements JadwalObatRepository {
 
   @override
   Future<void> saveJadwal(JadwalObat jadwal) async {
-    // TODO: Implementasikan dengan Hive jika akan digunakan.
-    // Tim saat ini menggunakan ObatRepository dengan SharedPreferences.
+    await ObatRepository.instance.init();
+    await ObatRepository.instance.simpanJadwal(jadwal);
   }
 
   @override
   Future<List<JadwalObat>> getAllJadwal() async {
-    // TODO: Implementasikan dengan Hive jika akan digunakan.
-    return [];
+    await ObatRepository.instance.init();
+    return ObatRepository.instance.getJadwalList();
   }
 
   @override
   Future<void> deleteJadwal(String id) async {
-    // TODO: Implementasikan dengan Hive jika akan digunakan.
+    await ObatRepository.instance.init();
+    await ObatRepository.instance.hapusJadwal(id);
   }
 }
