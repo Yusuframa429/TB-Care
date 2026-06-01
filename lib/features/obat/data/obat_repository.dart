@@ -73,54 +73,7 @@ class ObatRepository {
     _tanggalMulai = DateTime.now(); // Mulai dari hari ini
     _totalHari = 180;
 
-    _jadwalList = [
-      JadwalObat(
-        id: 'seed_1',
-        namaObat: 'Rifampicin',
-        jumlahDosis: 1,
-        satuanDosis: 'kapsul',
-        waktuMinum: ['08:00', '20:00'],
-        kondisiMakan: 'Sebelum makan',
-        isNotifikasiAktif: false, // seed data: nonaktif agar tidak spam notif
-        isGetar: true,
-        isSuara: false,
-      ),
-      JadwalObat(
-        id: 'seed_2',
-        namaObat: 'INH',
-        jumlahDosis: 1,
-        satuanDosis: 'tablet',
-        waktuMinum: ['08:00', '20:00'],
-        kondisiMakan: 'Sebelum makan',
-        isNotifikasiAktif: false,
-        isGetar: true,
-        isSuara: false,
-      ),
-      JadwalObat(
-        id: 'seed_3',
-        namaObat: 'PZA',
-        jumlahDosis: 1,
-        satuanDosis: 'tablet',
-        waktuMinum: ['08:00'],
-        kondisiMakan: 'Sebelum makan',
-        isNotifikasiAktif: false,
-        isGetar: true,
-        isSuara: false,
-      ),
-      JadwalObat(
-        id: 'seed_4',
-        namaObat: 'EMB',
-        jumlahDosis: 1,
-        satuanDosis: 'tablet',
-        waktuMinum: ['08:00'],
-        kondisiMakan: 'Sebelum makan',
-        isNotifikasiAktif: false,
-        isGetar: true,
-        isSuara: false,
-      ),
-    ];
-
-    // Mulai dengan riwayat kosong (streak 0 hari)
+    _jadwalList = [];
     _riwayat = {};
 
     await _persist();
