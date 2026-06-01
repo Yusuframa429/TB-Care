@@ -53,6 +53,10 @@ app.*.map.json
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/**/GeneratedPluginRegistrant.cmake
+**/android/**/generated_plugin_registrant.cc
+
+# Environment variables
 
 # Environments
 .env
