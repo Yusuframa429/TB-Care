@@ -12,6 +12,8 @@ import '../widgets/profil_menu_item.dart';
 import '../widgets/profil_footer.dart';
 import '../../data/models/family_member_model.dart';
 import '../../data/repositories/family_repository.dart';
+import '../../../auth/data/auth_repository.dart';
+import '../../../auth/presentation/pages/login_page.dart';
 
 /// [ProfilPage] - Halaman profil pengguna.
 ///
@@ -48,6 +50,38 @@ class _ProfilPageState extends State<ProfilPage> {
       _activeMember = member;
       _isLoading = false;
     });
+  }
+
+  Future<void> _handleLogout() async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Keluar Akun'),
+        content: const Text('Apakah Anda yakin ingin keluar dari akun ini?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+            child: const Text('Keluar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await AuthRepository.instance.logout();
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+          (route) => false,
+        );
+      }
+    }
   }
 
   @override
@@ -188,7 +222,7 @@ class _ProfilPageState extends State<ProfilPage> {
             const SizedBox(height: 24),
 
             /// Footer: banner enkripsi, logout, versi app.
-            const ProfilFooter(),
+            ProfilFooter(onLogout: _handleLogout),
             const SizedBox(height: 24),
           ],
         ),

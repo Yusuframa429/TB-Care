@@ -4,6 +4,7 @@ import 'package:core_services/core_services.dart';
 
 import 'app/main_shell.dart';
 import 'core/services/notification_service.dart';
+import 'features/auth/presentation/pages/login_page.dart';
 import 'features/obat/data/obat_repository.dart';
 
 /// Notifier global untuk mengatur ukuran teks secara langsung (real-time) di seluruh aplikasi.
@@ -45,8 +46,11 @@ Future<void> main() async {
     if (savedScale != null) {
       globalTextScaleNotifier.value = savedScale;
     }
+    // ── Cek Sesi Login ───────────────────────────────────────────
+    final String? currentUser = await StorageService.instance.get<String>('auth_box', 'current_user');
+    final bool isLoggedIn = currentUser != null;
 
-    runApp(const TbCareApp());
+    runApp(TbCareApp(isLoggedIn: isLoggedIn));
   } catch (e, stacktrace) {
     debugPrint("FATAL ERROR IN MAIN: $e");
     debugPrint(stacktrace.toString());
@@ -76,7 +80,8 @@ Future<void> main() async {
 /// Widget ini bersifat [StatelessWidget] karena tidak memiliki
 /// state internal yang berubah.
 class TbCareApp extends StatelessWidget {
-  const TbCareApp({super.key});
+  final bool isLoggedIn;
+  const TbCareApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +106,8 @@ class TbCareApp extends StatelessWidget {
             );
           },
 
-          /// [MainShell] berfungsi sebagai kerangka utama yang menampilkan
           /// navbar dan halaman fitur di dalamnya.
-          home: const MainShell(),
+          home: isLoggedIn ? const MainShell() : const LoginPage(),
         );
       },
     );
