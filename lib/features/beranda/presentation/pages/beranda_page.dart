@@ -17,6 +17,8 @@ import 'edukasi_list_page.dart';
 import '../../../cek_ai/presentation/pages/cek_ai_page.dart';
 import '../../../profil/data/repositories/riwayat_pemeriksaan_repository.dart';
 import '../../../profil/presentation/pages/riwayat_pemeriksaan_page.dart';
+import '../../../profil/data/repositories/family_repository.dart';
+import '../../../profil/data/models/family_member_model.dart';
 
 /// [BerandaPage] - Halaman utama (Home) aplikasi TB Care.
 ///
@@ -51,6 +53,8 @@ class BerandaPageState extends State<BerandaPage> {
   int _cekBulanIni = 0;
   int _konsultasiSelesai = 0;
 
+  FamilyMemberModel? _activeMember;
+
   @override
   void initState() {
     super.initState();
@@ -61,13 +65,17 @@ class BerandaPageState extends State<BerandaPage> {
   Future<void> _loadData() async {
     await _repo.init();
     await RiwayatPemeriksaanRepository.instance.init();
+    await FamilyRepository.instance.init();
+    
+    _activeMember = await FamilyRepository.instance.getActiveMember();
     _recalculate();
     if (mounted) setState(() => _loading = false);
   }
 
   /// Dipanggil oleh [MainShell] saat user kembali ke tab Beranda.
   /// Memastikan seluruh data kepatuhan, pengingat, dan riwayat selalu sinkron.
-  void refreshData() {
+  void refreshData() async {
+    _activeMember = await FamilyRepository.instance.getActiveMember();
     _recalculate();
     if (mounted) setState(() {});
   }
@@ -228,10 +236,10 @@ class BerandaPageState extends State<BerandaPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// Header hijau dengan sapaan dinamis.
-            const BerandaHeader(
-              userName: 'Budi Santoso',
-              userInitials: 'BS',
-              status: 'Terdaftar',
+            BerandaHeader(
+              userName: _activeMember?.name ?? 'Pengguna',
+              userInitials: _activeMember?.initials ?? 'US',
+              status: _activeMember?.status ?? 'Terdaftar',
             ),
             const SizedBox(height: 20),
 

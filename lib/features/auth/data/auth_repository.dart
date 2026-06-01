@@ -1,4 +1,7 @@
 import 'package:core_services/core_services.dart';
+import '../../obat/data/obat_repository.dart';
+import '../../profil/data/repositories/family_repository.dart';
+import '../../profil/data/repositories/riwayat_pemeriksaan_repository.dart';
 
 class AuthRepository {
   static final AuthRepository instance = AuthRepository._();
@@ -69,5 +72,10 @@ class AuthRepository {
   /// Logout (menghapus sesi)
   Future<void> logout() async {
     await _storage.delete(_authBox, _currentUserKey);
+    
+    // Clear the memory cache of other repositories so the next login starts fresh
+    ObatRepository.instance.clearCache();
+    FamilyRepository.instance.clearCache();
+    RiwayatPemeriksaanRepository.instance.clearCache();
   }
 }
