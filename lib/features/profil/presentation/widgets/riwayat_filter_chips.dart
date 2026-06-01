@@ -20,11 +20,7 @@ class RiwayatFilterChips extends StatelessWidget {
     required this.onFilterChanged,
   });
 
-  static const List<String> _filters = [
-    'Semua',
-    'AI Check',
-    'Konsultasi',
-  ];
+  static const List<String> _filters = ['Semua', 'AI Check', 'Konsultasi'];
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +34,7 @@ class RiwayatFilterChips extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: isActive ? AppColors.primary : AppColors.white,
                 borderRadius: BorderRadius.circular(20),

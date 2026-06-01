@@ -68,10 +68,8 @@ class FrekuensiDropdown extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       items: _options
           .map(
-            (option) => DropdownMenuItem<String>(
-              value: option,
-              child: Text(option),
-            ),
+            (option) =>
+                DropdownMenuItem<String>(value: option, child: Text(option)),
           )
           .toList(),
     );

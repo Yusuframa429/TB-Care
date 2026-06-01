@@ -119,7 +119,8 @@ final List<Artikel> artikelList = [
     imageUrl:
         'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=400&fit=crop',
     kategori: 'Nutrisi',
-    linkArtikel: 'https://tbindonesia.or.id/informasi/tentang-tbc/pantangan-tbc/',
+    linkArtikel:
+        'https://tbindonesia.or.id/informasi/tentang-tbc/pantangan-tbc/',
     tanggalPublikasi: DateTime(2026, 4, 28),
     waktuBacaMenit: 4,
   ),

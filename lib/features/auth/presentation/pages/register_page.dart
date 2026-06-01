@@ -86,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                
+
                 // Input Nama Lengkap
                 TextFormField(
                   controller: _nameCtrl,
@@ -98,11 +98,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderSide: const BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (val) {
-                    if (val == null || val.isEmpty) return 'Nama lengkap wajib diisi';
+                    if (val == null || val.isEmpty)
+                      return 'Nama lengkap wajib diisi';
                     return null;
                   },
                 ),
@@ -119,17 +123,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderSide: const BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (val) {
-                    if (val == null || val.isEmpty) return 'Username wajib diisi';
+                    if (val == null || val.isEmpty)
+                      return 'Username wajib diisi';
                     if (val.length < 3) return 'Username minimal 3 karakter';
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Input Password
                 TextFormField(
                   controller: _passwordCtrl,
@@ -139,7 +147,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
                       onPressed: () {
                         setState(() {
@@ -152,17 +162,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderSide: const BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (val) {
-                    if (val == null || val.isEmpty) return 'Password wajib diisi';
+                    if (val == null || val.isEmpty)
+                      return 'Password wajib diisi';
                     if (val.length < 6) return 'Password minimal 6 karakter';
                     return null;
                   },
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Tombol Register
                 ElevatedButton(
                   onPressed: _isLoading ? null : _handleRegister,

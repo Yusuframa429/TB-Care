@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 
 /// [ToggleRow] - Baris status toggle on/off dengan ikon.
@@ -26,16 +26,29 @@ class ToggleRow extends StatelessWidget {
         Container(
           width: 36,
           height: 36,
-          decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+            color: iconColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Icon(icon, size: 18, color: iconColor),
         ),
         const SizedBox(width: 12),
-        Expanded(child: Text(label, style: const TextStyle(fontSize: 13, color: AppColors.textPrimary))),
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 13, color: AppColors.textPrimary),
+          ),
+        ),
         Container(
           width: 20,
           height: 20,
-          decoration: BoxDecoration(color: value ? AppColors.primary : AppColors.border, borderRadius: BorderRadius.circular(6)),
-          child: value ? const Icon(Icons.check, size: 14, color: AppColors.white) : null,
+          decoration: BoxDecoration(
+            color: value ? AppColors.primary : AppColors.border,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: value
+              ? const Icon(Icons.check, size: 14, color: AppColors.white)
+              : null,
         ),
       ],
     );

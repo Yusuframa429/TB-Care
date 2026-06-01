@@ -28,10 +28,7 @@ class AturJadwalObatPage extends StatefulWidget {
   /// Mode edit (true = sedang mengedit jadwal yang ada).
   final bool isEditMode;
 
-  const AturJadwalObatPage({
-    super.key,
-    this.isEditMode = false,
-  });
+  const AturJadwalObatPage({super.key, this.isEditMode = false});
 
   @override
   State<AturJadwalObatPage> createState() => _AturJadwalObatPageState();
@@ -285,9 +282,7 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
       controller: _namaObatController,
       textCapitalization: TextCapitalization.words,
       style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
-      decoration: _buildInputDecoration(
-        hintText: 'Contoh: Rifampicin',
-      ),
+      decoration: _buildInputDecoration(hintText: 'Contoh: Rifampicin'),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Nama obat tidak boleh kosong';
@@ -342,10 +337,7 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
               },
               items: _satuanOptions
                   .map(
-                    (s) => DropdownMenuItem<String>(
-                      value: s,
-                      child: Text(s),
-                    ),
+                    (s) => DropdownMenuItem<String>(value: s, child: Text(s)),
                   )
                   .toList(),
             ),
@@ -374,10 +366,7 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
         icon: const Icon(Icons.save_rounded, size: 20),
         label: const Text(
           'Simpan Jadwal',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,

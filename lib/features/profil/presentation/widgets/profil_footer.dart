@@ -13,11 +13,7 @@ class ProfilFooter extends StatelessWidget {
   final VoidCallback? onLogout;
   final String appVersion;
 
-  const ProfilFooter({
-    super.key,
-    this.onLogout,
-    this.appVersion = 'v2.4.1',
-  });
+  const ProfilFooter({super.key, this.onLogout, this.appVersion = 'v2.4.1'});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +24,7 @@ class ProfilFooter extends StatelessWidget {
           /// Banner enkripsi data.
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              vertical: 12,
-              horizontal: 16,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
               color: AppColors.primaryLight,
               borderRadius: BorderRadius.circular(12),

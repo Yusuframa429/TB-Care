@@ -27,7 +27,10 @@ class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
 
   Future<void> _loadSettings() async {
     final obat = await _storage.get<bool>(_boxName, 'notif_pengingat_obat');
-    final pemeriksaan = await _storage.get<bool>(_boxName, 'notif_jadwal_pemeriksaan');
+    final pemeriksaan = await _storage.get<bool>(
+      _boxName,
+      'notif_jadwal_pemeriksaan',
+    );
     final tips = await _storage.get<bool>(_boxName, 'notif_tips_kesehatan');
 
     if (mounted) {
@@ -53,7 +56,10 @@ class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
@@ -66,93 +72,120 @@ class _NotifikasiSettingsPageState extends State<NotifikasiSettingsPage> {
         ),
         centerTitle: false,
       ),
-      body: _isLoading 
+      body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            _buildSectionLabel('PENGINGAT MEDIS'),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(16),
-              ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SwitchListTile(
-                    activeColor: AppColors.primary,
-                    title: const Text(
-                      'Pengingat Minum Obat',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  const SizedBox(height: 16),
+                  _buildSectionLabel('PENGINGAT MEDIS'),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
                     ),
-                    subtitle: Text(
-                      'Terima notifikasi sesuai jadwal minum obat Anda',
-                      style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    value: _pengingatObat,
-                    onChanged: (val) {
-                      setState(() {
-                        _pengingatObat = val;
-                      });
-                      _saveSetting('notif_pengingat_obat', val);
-                      // TODO: Implementasi logika mematikan jadwal notifikasi di OS
-                    },
+                    child: Column(
+                      children: [
+                        SwitchListTile(
+                          activeTrackColor: AppColors.primaryLight,
+                          activeThumbColor: AppColors.primary,
+                          title: const Text(
+                            'Pengingat Minum Obat',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Terima notifikasi sesuai jadwal minum obat Anda',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          value: _pengingatObat,
+                          onChanged: (val) {
+                            setState(() {
+                              _pengingatObat = val;
+                            });
+                            _saveSetting('notif_pengingat_obat', val);
+                            // TODO: Implementasi logika mematikan jadwal notifikasi di OS
+                          },
+                        ),
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        SwitchListTile(
+                          activeTrackColor: AppColors.primaryLight,
+                          activeThumbColor: AppColors.primary,
+                          title: const Text(
+                            'Jadwal Pemeriksaan',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Pengingat H-1 sebelum jadwal kunjungan dokter',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          value: _jadwalPemeriksaan,
+                          onChanged: (val) {
+                            setState(() {
+                              _jadwalPemeriksaan = val;
+                            });
+                            _saveSetting('notif_jadwal_pemeriksaan', val);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  const Divider(height: 1, indent: 16, endIndent: 16),
-                  SwitchListTile(
-                    activeColor: AppColors.primary,
-                    title: const Text(
-                      'Jadwal Pemeriksaan',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  const SizedBox(height: 16),
+                  _buildSectionLabel('INFORMASI & TIPS'),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
                     ),
-                    subtitle: Text(
-                      'Pengingat H-1 sebelum jadwal kunjungan dokter',
-                      style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    value: _jadwalPemeriksaan,
-                    onChanged: (val) {
-                      setState(() {
-                        _jadwalPemeriksaan = val;
-                      });
-                      _saveSetting('notif_jadwal_pemeriksaan', val);
-                    },
+                    child: SwitchListTile(
+                      activeTrackColor: AppColors.primaryLight,
+                      activeThumbColor: AppColors.primary,
+                      title: const Text(
+                        'Tips Kesehatan & Artikel',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Terima artikel harian tentang pemulihan TBC',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      value: _tipsKesehatan,
+                      onChanged: (val) {
+                        setState(() {
+                          _tipsKesehatan = val;
+                        });
+                        _saveSetting('notif_tips_kesehatan', val);
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            _buildSectionLabel('INFORMASI & TIPS'),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: SwitchListTile(
-                activeColor: AppColors.primary,
-                title: const Text(
-                  'Tips Kesehatan & Artikel',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                ),
-                subtitle: Text(
-                  'Terima artikel harian tentang pemulihan TBC',
-                  style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
-                ),
-                value: _tipsKesehatan,
-                onChanged: (val) {
-                  setState(() {
-                    _tipsKesehatan = val;
-                  });
-                  _saveSetting('notif_tips_kesehatan', val);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 

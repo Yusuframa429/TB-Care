@@ -79,14 +79,10 @@ class HasilGejalaSection extends StatelessWidget {
             width: 22,
             height: 22,
             decoration: BoxDecoration(
-              color: isDetected
-                  ? AppColors.primary
-                  : AppColors.background,
+              color: isDetected ? AppColors.primary : AppColors.background,
               borderRadius: BorderRadius.circular(5),
               border: Border.all(
-                color: isDetected
-                    ? AppColors.primary
-                    : AppColors.border,
+                color: isDetected ? AppColors.primary : AppColors.border,
                 width: 1.5,
               ),
             ),
@@ -108,8 +104,7 @@ class HasilGejalaSection extends StatelessWidget {
               color: isDetected
                   ? AppColors.textPrimary
                   : AppColors.textSecondary.withValues(alpha: 0.6),
-              fontWeight:
-                  isDetected ? FontWeight.w500 : FontWeight.w400,
+              fontWeight: isDetected ? FontWeight.w500 : FontWeight.w400,
             ),
           ),
         ],

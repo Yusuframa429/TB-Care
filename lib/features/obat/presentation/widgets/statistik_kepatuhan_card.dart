@@ -111,11 +111,7 @@ class _StatItem extends StatelessWidget {
           ),
         ),
         if (showDivider)
-          Container(
-            width: 1,
-            height: 40,
-            color: AppColors.border,
-          ),
+          Container(width: 1, height: 40, color: AppColors.border),
       ],
     );
   }

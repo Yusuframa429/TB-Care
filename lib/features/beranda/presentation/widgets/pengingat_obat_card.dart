@@ -80,7 +80,11 @@ class PengingatObatCard extends StatelessWidget {
                   /// Baris status: waktu + status diminum/belum.
                   Row(
                     children: [
-                      const Icon(Icons.schedule, size: 14, color: AppColors.textSecondary),
+                      const Icon(
+                        Icons.schedule,
+                        size: 14,
+                        color: AppColors.textSecondary,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '$time — ${isTaken ? 'Sudah diminum' : 'Belum diminum'}',

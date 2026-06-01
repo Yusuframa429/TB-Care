@@ -12,10 +12,7 @@ import 'package:core_ui/core_ui.dart';
 class CekAiSymptomChips extends StatelessWidget {
   final List<String> symptoms;
 
-  const CekAiSymptomChips({
-    super.key,
-    required this.symptoms,
-  });
+  const CekAiSymptomChips({super.key, required this.symptoms});
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +33,7 @@ class CekAiSymptomChips extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.4),
-        ),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
       ),
       child: Text(
         label,

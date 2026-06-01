@@ -59,7 +59,8 @@ class _CekAiPageState extends State<CekAiPage> {
 
       // Beri intro di pertanyaan pertama
       if (_currentQuestionIndex == 0) {
-        text = 'Halo! Saya AI asisten kesehatan TBC. Mari kita mulai skrining awal Anda.\n\n$text';
+        text =
+            'Halo! Saya AI asisten kesehatan TBC. Mari kita mulai skrining awal Anda.\n\n$text';
       }
 
       _chatHistory.add(ChatMessage(isAi: true, text: text));
@@ -83,10 +84,13 @@ class _CekAiPageState extends State<CekAiPage> {
       } else {
         // Skrining selesai
         _isAnalyzing = true;
-        _chatHistory.add(ChatMessage(
-          isAi: true,
-          text: 'Terima kasih telah menjawab semua pertanyaan. Sedang menganalisis hasil...',
-        ));
+        _chatHistory.add(
+          ChatMessage(
+            isAi: true,
+            text:
+                'Terima kasih telah menjawab semua pertanyaan. Sedang menganalisis hasil...',
+          ),
+        );
         _finishScreening();
       }
     });
@@ -115,7 +119,7 @@ class _CekAiPageState extends State<CekAiPage> {
     } catch (e) {
       debugPrint("Gagal menyimpan riwayat skrining AI: $e");
     }
-    
+
     // Reset state jika user kembali dari halaman hasil
     setState(() {
       _currentQuestionIndex = 0;
@@ -129,9 +133,7 @@ class _CekAiPageState extends State<CekAiPage> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => HasilPemeriksaanPage(result: result),
-      ),
+      MaterialPageRoute(builder: (_) => HasilPemeriksaanPage(result: result)),
     );
   }
 
@@ -155,7 +157,9 @@ class _CekAiPageState extends State<CekAiPage> {
     if (_isAnalyzing) currentStep = 3; // Analisis
 
     final isFinished = _currentQuestionIndex >= screeningQuestions.length;
-    final currentQ = isFinished ? null : screeningQuestions[_currentQuestionIndex];
+    final currentQ = isFinished
+        ? null
+        : screeningQuestions[_currentQuestionIndex];
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -182,9 +186,7 @@ class _CekAiPageState extends State<CekAiPage> {
                           message: chat.text,
                           timestamp: 'AI', // placeholder sederhana
                         )
-                      : UserMessageBubble(
-                          message: chat.text,
-                        ),
+                      : UserMessageBubble(message: chat.text),
                 );
               },
             ),
@@ -238,7 +240,7 @@ class _CekAiPageState extends State<CekAiPage> {
                 ),
               ),
             ),
-            
+
           // Jika sedang menganalisis, tampilkan loading statis
           if (_isAnalyzing)
             Container(
@@ -247,9 +249,7 @@ class _CekAiPageState extends State<CekAiPage> {
               child: const SafeArea(
                 top: false,
                 child: Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primary,
-                  ),
+                  child: CircularProgressIndicator(color: AppColors.primary),
                 ),
               ),
             ),

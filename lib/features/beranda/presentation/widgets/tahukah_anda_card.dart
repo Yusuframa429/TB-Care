@@ -39,12 +39,20 @@ class TahukahAndaCard extends StatelessWidget {
               children: [
                 const Text(
                   'Tahukah Anda?',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.info),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.info,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   fact,
-                  style: TextStyle(fontSize: 13, color: AppColors.textPrimary.withValues(alpha: 0.8), height: 1.4),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textPrimary.withValues(alpha: 0.8),
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),

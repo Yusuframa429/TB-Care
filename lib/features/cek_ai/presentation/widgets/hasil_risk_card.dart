@@ -62,10 +62,7 @@ class HasilRiskCard extends StatelessWidget {
 
             /// Badge level risiko.
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
                 color: const Color(0xFFF59E0B),
                 borderRadius: BorderRadius.circular(20),

@@ -44,7 +44,9 @@ class NotificationService {
     _setLocalTimezone();
 
     // 2. Settings inisialisasi Android.
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
     // 3. Settings inisialisasi iOS (optional, jika platform iOS ada).
     const iosSettings = DarwinInitializationSettings(
@@ -104,21 +106,21 @@ class NotificationService {
   /// Meminta permission notifikasi.
   Future<void> _requestPermissions() async {
     // Android 13+ (API 33+) butuh runtime permission.
-    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     if (androidPlugin != null) {
       await androidPlugin.requestNotificationsPermission();
     }
 
     // iOS permission.
-    final iosPlugin = _plugin.resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>();
+    final iosPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >();
     if (iosPlugin != null) {
-      await iosPlugin.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+      await iosPlugin.requestPermissions(alert: true, badge: true, sound: true);
     }
   }
 
@@ -196,7 +198,8 @@ class NotificationService {
   String _buildBody(JadwalObat jadwal) {
     final buffer = StringBuffer();
     buffer.write(
-        'Dosis: ${jadwal.jumlahDosis} ${jadwal.satuanDosis} (${jadwal.kondisiMakan})');
+      'Dosis: ${jadwal.jumlahDosis} ${jadwal.satuanDosis} (${jadwal.kondisiMakan})',
+    );
     if (jadwal.catatan != null && jadwal.catatan!.trim().isNotEmpty) {
       buffer.write('. ${jadwal.catatan!.trim()}');
     }
@@ -224,10 +227,7 @@ class NotificationService {
       presentSound: jadwal.isSuara,
     );
 
-    return NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
+    return NotificationDetails(android: androidDetails, iOS: iosDetails);
   }
 
   /// Menghitung ID notifikasi unik dari [jadwalId] dan [index].
@@ -244,8 +244,14 @@ class NotificationService {
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
     final location = tz.local;
     final now = tz.TZDateTime.now(location);
-    var scheduledDate =
-        tz.TZDateTime(location, now.year, now.month, now.day, hour, minute);
+    var scheduledDate = tz.TZDateTime(
+      location,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }

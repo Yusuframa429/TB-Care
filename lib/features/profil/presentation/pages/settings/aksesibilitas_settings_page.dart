@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:core_services/core_services.dart';
-import 'package:tb_care/main.dart'; 
-
+import 'package:tb_care/main.dart';
 
 /// [AksesibilitasSettingsPage] - Halaman pengaturan aksesibilitas.
 class AksesibilitasSettingsPage extends StatefulWidget {
   const AksesibilitasSettingsPage({super.key});
 
   @override
-  State<AksesibilitasSettingsPage> createState() => _AksesibilitasSettingsPageState();
+  State<AksesibilitasSettingsPage> createState() =>
+      _AksesibilitasSettingsPageState();
 }
 
 class _AksesibilitasSettingsPageState extends State<AksesibilitasSettingsPage> {
@@ -56,7 +56,10 @@ class _AksesibilitasSettingsPageState extends State<AksesibilitasSettingsPage> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
@@ -86,7 +89,10 @@ class _AksesibilitasSettingsPageState extends State<AksesibilitasSettingsPage> {
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 16,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.cardBackground,
                       borderRadius: BorderRadius.circular(16),
@@ -132,7 +138,13 @@ class _AksesibilitasSettingsPageState extends State<AksesibilitasSettingsPage> {
                                 },
                               ),
                             ),
-                            const Text('A', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                            const Text(
+                              'A',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -141,14 +153,20 @@ class _AksesibilitasSettingsPageState extends State<AksesibilitasSettingsPage> {
                   const SizedBox(height: 24),
                   Row(
                     children: [
-                      const Icon(Icons.info_outline, color: AppColors.textSecondary, size: 20),
+                      const Icon(
+                        Icons.info_outline,
+                        color: AppColors.textSecondary,
+                        size: 20,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Catatan: Perubahan ukuran teks mungkin membutuhkan proses muat ulang aplikasi (restart) agar teraplikasi secara menyeluruh di seluruh halaman.',
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textSecondary.withValues(alpha: 0.8),
+                            color: AppColors.textSecondary.withValues(
+                              alpha: 0.8,
+                            ),
                           ),
                         ),
                       ),

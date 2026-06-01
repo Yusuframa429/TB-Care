@@ -33,10 +33,11 @@ class ObatRepository {
   /// Inisialisasi repository.
   Future<void> init() async {
     if (_initialized) return;
-    
-    final currentUser = await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
+
+    final currentUser =
+        await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
     _boxName = 'hive_obat_data_$currentUser';
-    
+
     // Load jadwal
     final jadwalStr = await _storage.get<String>(_boxName, _keyJadwal);
     if (jadwalStr != null) {
@@ -83,7 +84,11 @@ class ObatRepository {
   // ── Persistence ────────────────────────────────────────────
 
   Future<void> _persist() async {
-    await _storage.put(_boxName, _keyJadwal, JadwalObat.encodeList(_jadwalList));
+    await _storage.put(
+      _boxName,
+      _keyJadwal,
+      JadwalObat.encodeList(_jadwalList),
+    );
     await _storage.put(_boxName, _keyRiwayat, jsonEncode(_riwayat));
     await _storage.put(_boxName, _keyTglMulai, _tanggalMulai.toIso8601String());
     await _storage.put(_boxName, _keyTotalHari, _totalHari);
@@ -184,7 +189,7 @@ class ObatRepository {
   /// Persentase kepatuhan keseluruhan (0-100).
   int getKepatuhanPersen() {
     final waktuSet = _getAllWaktu();
-    if (waktuSet.isEmpty) return 100;
+    if (waktuSet.isEmpty) return 0; // Saat belum ada jadwal, kepatuhan 0%
 
     final hariKe = getHariKe();
     int totalDosis = 0;
@@ -232,9 +237,7 @@ class ObatRepository {
       if (waktuSet.isEmpty) return 'done';
 
       // Cek apakah semua waktu di hari itu sudah diminum.
-      final allDone = waktuSet.every(
-        (w) => _riwayat['${dateKey}_$w'] == true,
-      );
+      final allDone = waktuSet.every((w) => _riwayat['${dateKey}_$w'] == true);
       return allDone ? 'done' : 'missed';
     });
   }
@@ -252,8 +255,9 @@ class ObatRepository {
 
     // Cek hari ini dulu, kalau sudah lengkap include.
     final todayKey = _dateKey(now);
-    final todayAllDone =
-        waktuSet.every((w) => _riwayat['${todayKey}_$w'] == true);
+    final todayAllDone = waktuSet.every(
+      (w) => _riwayat['${todayKey}_$w'] == true,
+    );
     if (todayAllDone) streak++;
 
     // Mundur dari kemarin.
@@ -261,8 +265,7 @@ class ObatRepository {
       final date = now.subtract(Duration(days: i));
       if (date.isBefore(_tanggalMulai)) break;
       final dateKey = _dateKey(date);
-      final allDone =
-          waktuSet.every((w) => _riwayat['${dateKey}_$w'] == true);
+      final allDone = waktuSet.every((w) => _riwayat['${dateKey}_$w'] == true);
       if (!allDone) break;
       streak++;
     }
@@ -325,9 +328,11 @@ class ObatRepository {
     int total = 0;
     int diminum = 0;
 
-    for (var d = awalBulan;
-        !d.isAfter(now);
-        d = d.add(const Duration(days: 1))) {
+    for (
+      var d = awalBulan;
+      !d.isAfter(now);
+      d = d.add(const Duration(days: 1))
+    ) {
       if (d.isBefore(_tanggalMulai)) continue;
       final dateKey = _dateKey(d);
       for (final w in waktuSet) {

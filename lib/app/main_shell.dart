@@ -65,10 +65,7 @@ class _MainShellState extends State<MainShell> {
     return Scaffold(
       /// [IndexedStack] menampilkan satu child sesuai [_currentIndex],
       /// tetapi tetap mempertahankan state child lainnya di memori.
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
 
       /// Navbar custom dari package [core_ui].
       /// Ditempatkan di [bottomNavigationBar] agar menempel di bawah layar.

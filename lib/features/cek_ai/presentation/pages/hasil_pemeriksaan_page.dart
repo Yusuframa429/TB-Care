@@ -91,14 +91,16 @@ class HasilPemeriksaanPage extends StatelessWidget {
               message: recommendationText,
               onCariTap: () async {
                 final uri = Uri.parse(
-                    'https://www.google.com/maps/search/?api=1&query=puskesmas');
+                  'https://www.google.com/maps/search/?api=1&query=puskesmas',
+                );
                 if (await canLaunchUrl(uri)) {
                   await launchUrl(uri, mode: LaunchMode.externalApplication);
                 } else {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Tidak dapat membuka Google Maps')),
+                        content: Text('Tidak dapat membuka Google Maps'),
+                      ),
                     );
                   }
                 }

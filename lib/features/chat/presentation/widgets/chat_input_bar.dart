@@ -104,7 +104,9 @@ class ChatInputBar extends StatelessWidget {
                           hintText: 'Ketik pertanyaan Anda...',
                           hintStyle: TextStyle(
                             fontSize: 14,
-                            color: AppColors.textSecondary.withValues(alpha: 0.6),
+                            color: AppColors.textSecondary.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 18,
@@ -158,9 +160,7 @@ class ChatInputBar extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: AppColors.primary.withValues(alpha: 0.4),
-          ),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
         ),
         child: Text(
           text,

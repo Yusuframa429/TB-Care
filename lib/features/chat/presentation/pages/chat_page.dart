@@ -89,14 +89,17 @@ class _ChatPageState extends State<ChatPage> {
 
   /// Menambahkan pesan sambutan otomatis dari AI.
   void _addWelcomeMessage() {
-    _messages.add(_ChatMessage(
-      isAi: true,
-      text: 'Halo! Saya asisten AI kesehatan TBC. '
-          'Saya siap membantu menjawab pertanyaan seputar TBC, '
-          'pengobatan, dan pencegahannya. '
-          'Ada yang bisa saya bantu?',
-      timestamp: _currentTime(),
-    ));
+    _messages.add(
+      _ChatMessage(
+        isAi: true,
+        text:
+            'Halo! Saya asisten AI kesehatan TBC. '
+            'Saya siap membantu menjawab pertanyaan seputar TBC, '
+            'pengobatan, dan pencegahannya. '
+            'Ada yang bisa saya bantu?',
+        timestamp: _currentTime(),
+      ),
+    );
   }
 
   // ── Chat Actions ───────────────────────────────────────────
@@ -108,11 +111,9 @@ class _ChatPageState extends State<ChatPage> {
 
     // Tambahkan pesan user ke chat.
     setState(() {
-      _messages.add(_ChatMessage(
-        isAi: false,
-        text: trimmed,
-        timestamp: _currentTime(),
-      ));
+      _messages.add(
+        _ChatMessage(isAi: false, text: trimmed, timestamp: _currentTime()),
+      );
       _isTyping = true;
     });
 
@@ -125,11 +126,9 @@ class _ChatPageState extends State<ChatPage> {
     if (!mounted) return;
 
     setState(() {
-      _messages.add(_ChatMessage(
-        isAi: true,
-        text: response,
-        timestamp: _currentTime(),
-      ));
+      _messages.add(
+        _ChatMessage(isAi: true, text: response, timestamp: _currentTime()),
+      );
       _isTyping = false;
     });
 
@@ -187,9 +186,7 @@ class _ChatPageState extends State<ChatPage> {
           ),
 
           /// Konten utama sesuai mode.
-          Expanded(
-            child: _isAiMode ? _buildAiChatView() : _buildDokterView(),
-          ),
+          Expanded(child: _isAiMode ? _buildAiChatView() : _buildDokterView()),
 
           /// Input bar hanya tampil di Mode AI.
           if (_isAiMode)
@@ -228,14 +225,8 @@ class _ChatPageState extends State<ChatPage> {
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: msg.isAi
-              ? ChatAiBubble(
-                  message: msg.text,
-                  timestamp: msg.timestamp,
-                )
-              : ChatUserBubble(
-                  message: msg.text,
-                  timestamp: msg.timestamp,
-                ),
+              ? ChatAiBubble(message: msg.text, timestamp: msg.timestamp)
+              : ChatUserBubble(message: msg.text, timestamp: msg.timestamp),
         );
       },
     );
@@ -276,4 +267,3 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
-

@@ -82,8 +82,9 @@ class _ObatPageState extends State<ObatPage> {
           content: const Text('✅ Obat berhasil dicatat!'),
           backgroundColor: AppColors.primary,
           behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -96,8 +97,10 @@ class _ObatPageState extends State<ObatPage> {
     final parts = waktu.split(':');
     final hour = int.tryParse(parts[0]) ?? 0;
     final minute = int.tryParse(parts[1]) ?? 0;
-    final newTime = TimeOfDay(hour: hour, minute: minute)
-        .replacing(minute: (minute + 30) % 60, hour: minute + 30 >= 60 ? hour + 1 : hour);
+    final newTime = TimeOfDay(hour: hour, minute: minute).replacing(
+      minute: (minute + 30) % 60,
+      hour: minute + 30 >= 60 ? hour + 1 : hour,
+    );
     final newTimeStr =
         '${newTime.hour.toString().padLeft(2, '0')}:${newTime.minute.toString().padLeft(2, '0')}';
 
@@ -115,9 +118,10 @@ class _ObatPageState extends State<ObatPage> {
   /// Navigasi ke halaman detail setelah user memilih obat dari bottom sheet.
   void _onTapSesi(String waktu) {
     // Cari semua jadwal obat yang memiliki waktu ini.
-    final obatSesi = _repo.getJadwalList().where(
-      (j) => j.waktuMinum.contains(waktu),
-    ).toList();
+    final obatSesi = _repo
+        .getJadwalList()
+        .where((j) => j.waktuMinum.contains(waktu))
+        .toList();
 
     if (obatSesi.isEmpty) return;
 
@@ -199,9 +203,7 @@ class _ObatPageState extends State<ObatPage> {
   void _navigateToDetail(JadwalObat jadwal) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => DetailObatPage(jadwal: jadwal),
-      ),
+      MaterialPageRoute(builder: (_) => DetailObatPage(jadwal: jadwal)),
     );
   }
 
@@ -222,7 +224,9 @@ class _ObatPageState extends State<ObatPage> {
     if (_loading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
       );
     }
 
@@ -253,10 +257,7 @@ class _ObatPageState extends State<ObatPage> {
                   const SizedBox(height: 12),
 
                   /// Kartu streak motivasi.
-                  StreakCard(
-                    streakHari: _streak,
-                    pesan: _pesanStreak,
-                  ),
+                  StreakCard(streakHari: _streak, pesan: _pesanStreak),
                   const SizedBox(height: 20),
 
                   /// Section: Jadwal Hari Ini.
@@ -370,10 +371,7 @@ class _ObatPageState extends State<ObatPage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
                   /// Tombol back hanya muncul jika halaman di-push (bukan tab).
@@ -438,10 +436,7 @@ class _ObatListItem extends StatelessWidget {
   final JadwalObat jadwal;
   final VoidCallback onTap;
 
-  const _ObatListItem({
-    required this.jadwal,
-    required this.onTap,
-  });
+  const _ObatListItem({required this.jadwal, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

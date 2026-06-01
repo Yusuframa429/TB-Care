@@ -8,7 +8,7 @@ class AuthRepository {
   AuthRepository._();
 
   final StorageService _storage = StorageService.instance;
-  
+
   static const String _authBox = 'auth_box';
   static const String _usersBox = 'users_box';
   static const String _currentUserKey = 'current_user';
@@ -21,7 +21,10 @@ class AuthRepository {
     required String password,
   }) async {
     // Cek apakah username sudah ada
-    final existingUser = await _storage.get<Map<dynamic, dynamic>>(_usersBox, username);
+    final existingUser = await _storage.get<Map<dynamic, dynamic>>(
+      _usersBox,
+      username,
+    );
     if (existingUser != null) {
       return 'Username sudah terdaftar';
     }
@@ -30,7 +33,8 @@ class AuthRepository {
     final userData = {
       'name': name,
       'username': username,
-      'password': password, // PERINGATAN: Di aplikasi nyata, password harus di-hash (misal bcrypt)
+      'password':
+          password, // PERINGATAN: Di aplikasi nyata, password harus di-hash (misal bcrypt)
     };
 
     await _storage.put(_usersBox, username, userData);
@@ -42,8 +46,11 @@ class AuthRepository {
     required String username,
     required String password,
   }) async {
-    final userData = await _storage.get<Map<dynamic, dynamic>>(_usersBox, username);
-    
+    final userData = await _storage.get<Map<dynamic, dynamic>>(
+      _usersBox,
+      username,
+    );
+
     if (userData == null) {
       return 'Username tidak ditemukan';
     }
@@ -72,7 +79,7 @@ class AuthRepository {
   /// Logout (menghapus sesi)
   Future<void> logout() async {
     await _storage.delete(_authBox, _currentUserKey);
-    
+
     // Clear the memory cache of other repositories so the next login starts fresh
     ObatRepository.instance.clearCache();
     FamilyRepository.instance.clearCache();

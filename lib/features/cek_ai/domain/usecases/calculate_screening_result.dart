@@ -64,14 +64,15 @@ class CalculateScreeningResult {
     }
 
     // Rule 4: Semua gejala = 0 -> Low
-    bool allSymptomsZero = g1Score == 0 &&
+    bool allSymptomsZero =
+        g1Score == 0 &&
         g2Score == 0 &&
         g3Score == 0 &&
         g4Score == 0 &&
         g5Score == 0 &&
         g7Score == 0 &&
         (answers['G6']?.score ?? 0) == 0;
-    
+
     if (allSymptomsZero) {
       risk = RiskLevel.low;
     }

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 
 import '../../domain/entities/jadwal_obat.dart';
@@ -59,10 +59,15 @@ class _DetailObatPageState extends State<DetailObatPage> {
   Future<void> _editJadwal() async {
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (_) => const AturJadwalObatPage(isEditMode: true)),
+      MaterialPageRoute(
+        builder: (_) => const AturJadwalObatPage(isEditMode: true),
+      ),
     );
     if (result == true && mounted) {
-      final updated = _repo.getJadwalList().where((j) => j.id == _jadwal.id).firstOrNull;
+      final updated = _repo
+          .getJadwalList()
+          .where((j) => j.id == _jadwal.id)
+          .firstOrNull;
       if (updated != null) {
         setState(() {
           _jadwal = updated;
@@ -78,9 +83,15 @@ class _DetailObatPageState extends State<DetailObatPage> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Hapus Jadwal'),
-        content: Text('Yakin ingin menghapus jadwal "${_jadwal.namaObat}"?', style: const TextStyle(fontSize: 14)),
+        content: Text(
+          'Yakin ingin menghapus jadwal "${_jadwal.namaObat}"?',
+          style: const TextStyle(fontSize: 14),
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Batal'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: AppColors.danger),
@@ -97,7 +108,9 @@ class _DetailObatPageState extends State<DetailObatPage> {
             content: Text('${_jadwal.namaObat} berhasil dihapus'),
             backgroundColor: AppColors.danger,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
         Navigator.pop(context, true);
@@ -113,10 +126,20 @@ class _DetailObatPageState extends State<DetailObatPage> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Detail Obat', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+        title: const Text(
+          'Detail Obat',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
+        ),
         centerTitle: false,
       ),
       body: SingleChildScrollView(
@@ -137,7 +160,10 @@ class _DetailObatPageState extends State<DetailObatPage> {
             const SizedBox(height: 20),
             _sectionLabel('Informasi Umum'),
             const SizedBox(height: 10),
-            DetailInfoCard(frekuensi: _jadwal.frekuensi ?? 'Setiap hari', kondisiMakan: _jadwal.kondisiMakan),
+            DetailInfoCard(
+              frekuensi: _jadwal.frekuensi ?? 'Setiap hari',
+              kondisiMakan: _jadwal.kondisiMakan,
+            ),
             const SizedBox(height: 20),
             _sectionLabel('Pengaturan Pengingat'),
             const SizedBox(height: 10),
@@ -155,7 +181,11 @@ class _DetailObatPageState extends State<DetailObatPage> {
             const SizedBox(height: 20),
             _sectionLabel('Kepatuhan 30 Hari Terakhir'),
             const SizedBox(height: 10),
-            DetailStatistikCard(persen: _persen30Hari, diminum: _diminum30Hari, total: _total30Hari),
+            DetailStatistikCard(
+              persen: _persen30Hari,
+              diminum: _diminum30Hari,
+              total: _total30Hari,
+            ),
             const SizedBox(height: 24),
             DetailActionButtons(onEdit: _editJadwal, onDelete: _hapusJadwal),
             const SizedBox(height: 16),

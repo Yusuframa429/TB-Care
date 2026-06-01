@@ -13,10 +13,7 @@ class MingguIniCard extends StatelessWidget {
   /// Nilai: 'done', 'missed', 'today', 'upcoming'.
   final List<String> statusPerHari;
 
-  const MingguIniCard({
-    super.key,
-    required this.statusPerHari,
-  });
+  const MingguIniCard({super.key, required this.statusPerHari});
 
   static const List<String> _namaHari = [
     'Sen',
@@ -124,7 +121,10 @@ class _DayIndicator extends StatelessWidget {
       default: // upcoming
         bgColor = const Color(0xFFF3F4F6);
         borderColor = AppColors.border;
-        icon = const Text('—', style: TextStyle(fontSize: 12, color: AppColors.textSecondary));
+        icon = const Text(
+          '—',
+          style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+        );
     }
 
     return Column(

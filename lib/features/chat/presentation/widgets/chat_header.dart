@@ -28,12 +28,16 @@ class ChatHeader extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
+                    icon: const Icon(
+                      Icons.arrow_back_rounded,
+                      color: AppColors.textPrimary,
+                    ),
                     onPressed: () => Navigator.pop(context),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
                 ),
+
               /// Judul dan subtitle.
               Expanded(
                 child: Column(
@@ -64,7 +68,9 @@ class ChatHeader extends StatelessWidget {
                           isAiMode ? 'Aktif 24/7' : 'Dokter Online',
                           style: TextStyle(
                             fontSize: 13,
-                            color: AppColors.textSecondary.withValues(alpha: 0.8),
+                            color: AppColors.textSecondary.withValues(
+                              alpha: 0.8,
+                            ),
                           ),
                         ),
                       ],

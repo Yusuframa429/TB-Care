@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 
 /// [DetailCatatanCard] - Kartu catatan pribadi obat.
@@ -24,10 +24,21 @@ class DetailCatatanCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.notes_rounded, size: 20, color: AppColors.textSecondary),
+          const Icon(
+            Icons.notes_rounded,
+            size: 20,
+            color: AppColors.textSecondary,
+          ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(catatan, style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5)),
+            child: Text(
+              catatan,
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textPrimary,
+                height: 1.5,
+              ),
+            ),
           ),
         ],
       ),

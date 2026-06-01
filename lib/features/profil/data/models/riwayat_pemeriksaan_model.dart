@@ -113,7 +113,7 @@ class RiwayatPemeriksaanModel {
       'Sep',
       'Okt',
       'Nov',
-      'Des'
+      'Des',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

@@ -60,41 +60,40 @@ class JadwalObat {
 
   /// Konversi entity ke Map (untuk disimpan ke SharedPreferences / JSON).
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'namaObat': namaObat,
-        'jumlahDosis': jumlahDosis,
-        'satuanDosis': satuanDosis,
-        'waktuMinum': waktuMinum,
-        'kondisiMakan': kondisiMakan,
-        'frekuensi': frekuensi,
-        'catatan': catatan,
-        'isNotifikasiAktif': isNotifikasiAktif,
-        'isGetar': isGetar,
-        'isSuara': isSuara,
-      };
+    'id': id,
+    'namaObat': namaObat,
+    'jumlahDosis': jumlahDosis,
+    'satuanDosis': satuanDosis,
+    'waktuMinum': waktuMinum,
+    'kondisiMakan': kondisiMakan,
+    'frekuensi': frekuensi,
+    'catatan': catatan,
+    'isNotifikasiAktif': isNotifikasiAktif,
+    'isGetar': isGetar,
+    'isSuara': isSuara,
+  };
 
   /// Buat entity dari Map JSON (setelah dibaca dari SharedPreferences).
   factory JadwalObat.fromJson(Map<String, dynamic> json) => JadwalObat(
-        id: json['id'] as String,
-        namaObat: json['namaObat'] as String,
-        jumlahDosis: (json['jumlahDosis'] as num).toInt(),
-        satuanDosis: json['satuanDosis'] as String,
-        waktuMinum: List<String>.from(json['waktuMinum'] as List),
-        kondisiMakan: json['kondisiMakan'] as String,
-        frekuensi: json['frekuensi'] as String?,
-        catatan: json['catatan'] as String?,
-        isNotifikasiAktif: json['isNotifikasiAktif'] as bool? ?? true,
-        isGetar: json['isGetar'] as bool? ?? true,
-        isSuara: json['isSuara'] as bool? ?? false,
-      );
+    id: json['id'] as String,
+    namaObat: json['namaObat'] as String,
+    jumlahDosis: (json['jumlahDosis'] as num).toInt(),
+    satuanDosis: json['satuanDosis'] as String,
+    waktuMinum: List<String>.from(json['waktuMinum'] as List),
+    kondisiMakan: json['kondisiMakan'] as String,
+    frekuensi: json['frekuensi'] as String?,
+    catatan: json['catatan'] as String?,
+    isNotifikasiAktif: json['isNotifikasiAktif'] as bool? ?? true,
+    isGetar: json['isGetar'] as bool? ?? true,
+    isSuara: json['isSuara'] as bool? ?? false,
+  );
 
   /// Enkode list jadwal ke String JSON (untuk disimpan ke SharedPreferences).
   static String encodeList(List<JadwalObat> list) =>
       jsonEncode(list.map((j) => j.toJson()).toList());
 
   /// Dekode String JSON menjadi list jadwal (setelah dibaca dari SharedPreferences).
-  static List<JadwalObat> decodeList(String str) =>
-      (jsonDecode(str) as List)
-          .map((j) => JadwalObat.fromJson(j as Map<String, dynamic>))
-          .toList();
+  static List<JadwalObat> decodeList(String str) => (jsonDecode(str) as List)
+      .map((j) => JadwalObat.fromJson(j as Map<String, dynamic>))
+      .toList();
 }

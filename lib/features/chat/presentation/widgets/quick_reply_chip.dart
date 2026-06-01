@@ -12,11 +12,7 @@ class QuickReplyChip extends StatelessWidget {
   /// Callback saat chip ditekan.
   final VoidCallback? onTap;
 
-  const QuickReplyChip({
-    super.key,
-    required this.label,
-    this.onTap,
-  });
+  const QuickReplyChip({super.key, required this.label, this.onTap});
 
   @override
   Widget build(BuildContext context) {

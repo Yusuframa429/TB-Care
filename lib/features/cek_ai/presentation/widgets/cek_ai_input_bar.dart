@@ -14,11 +14,7 @@ class CekAiInputBar extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback? onSend;
 
-  const CekAiInputBar({
-    super.key,
-    required this.controller,
-    this.onSend,
-  });
+  const CekAiInputBar({super.key, required this.controller, this.onSend});
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +52,7 @@ class CekAiInputBar extends StatelessWidget {
                   ),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.only(left: 14, right: 8),
-                    child: Text(
-                      '🔍',
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                    child: Text('🔍', style: const TextStyle(fontSize: 16)),
                   ),
                   prefixIconConstraints: const BoxConstraints(
                     minWidth: 0,

@@ -10,10 +10,7 @@ import 'package:core_ui/core_ui.dart';
 class UserMessageBubble extends StatelessWidget {
   final String message;
 
-  const UserMessageBubble({
-    super.key,
-    required this.message,
-  });
+  const UserMessageBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {

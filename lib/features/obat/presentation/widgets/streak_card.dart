@@ -13,11 +13,7 @@ class StreakCard extends StatelessWidget {
   /// Pesan motivasi yang ditampilkan.
   final String pesan;
 
-  const StreakCard({
-    super.key,
-    required this.streakHari,
-    required this.pesan,
-  });
+  const StreakCard({super.key, required this.streakHari, required this.pesan});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +23,7 @@ class StreakCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFFF8E1),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color(0xFFFED7AA),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFFED7AA), width: 1),
       ),
       child: Row(
         children: [

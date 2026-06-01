@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 import 'toggle_row.dart';
 
@@ -27,17 +27,36 @@ class DetailPengingatCard extends StatelessWidget {
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: AppColors.cardShadow, blurRadius: 10, offset: const Offset(0, 2)),
+          BoxShadow(
+            color: AppColors.cardShadow,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
         children: [
-          ToggleRow(icon: Icons.notifications_rounded, iconColor: AppColors.primary, label: 'Notifikasi', value: isNotifikasiAktif),
+          ToggleRow(
+            icon: Icons.notifications_rounded,
+            iconColor: AppColors.primary,
+            label: 'Notifikasi',
+            value: isNotifikasiAktif,
+          ),
           if (isNotifikasiAktif) ...[
             const Divider(height: 20, color: AppColors.border),
-            ToggleRow(icon: Icons.vibration_rounded, iconColor: AppColors.warning, label: 'Getar (Vibration)', value: isGetar),
+            ToggleRow(
+              icon: Icons.vibration_rounded,
+              iconColor: AppColors.warning,
+              label: 'Getar (Vibration)',
+              value: isGetar,
+            ),
             const Divider(height: 20, color: AppColors.border),
-            ToggleRow(icon: Icons.volume_up_rounded, iconColor: AppColors.info, label: 'Suara (Sound)', value: isSuara),
+            ToggleRow(
+              icon: Icons.volume_up_rounded,
+              iconColor: AppColors.info,
+              label: 'Suara (Sound)',
+              value: isSuara,
+            ),
           ],
         ],
       ),

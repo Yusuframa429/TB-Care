@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
-                
+
                 // Input Username
                 TextFormField(
                   controller: _usernameCtrl,
@@ -103,16 +103,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderSide: const BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (val) {
-                    if (val == null || val.isEmpty) return 'Username wajib diisi';
+                    if (val == null || val.isEmpty)
+                      return 'Username wajib diisi';
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Input Password
                 TextFormField(
                   controller: _passwordCtrl,
@@ -122,7 +126,9 @@ class _LoginPageState extends State<LoginPage> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
                       onPressed: () {
                         setState(() {
@@ -135,16 +141,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderSide: const BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (val) {
-                    if (val == null || val.isEmpty) return 'Password wajib diisi';
+                    if (val == null || val.isEmpty)
+                      return 'Password wajib diisi';
                     return null;
                   },
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Tombol Login
                 ElevatedButton(
                   onPressed: _isLoading ? null : _handleLogin,
@@ -175,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Tombol Register
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

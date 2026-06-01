@@ -14,6 +14,8 @@ import '../../data/models/family_member_model.dart';
 import '../../data/repositories/family_repository.dart';
 import '../../../auth/data/auth_repository.dart';
 import '../../../auth/presentation/pages/login_page.dart';
+import '../../../obat/data/obat_repository.dart';
+import '../../data/repositories/riwayat_pemeriksaan_repository.dart';
 
 /// [ProfilPage] - Halaman profil pengguna.
 ///
@@ -32,6 +34,10 @@ class _ProfilPageState extends State<ProfilPage> {
   FamilyMemberModel? _activeMember;
   bool _isLoading = true;
 
+  int _hariPengobatan = 0;
+  int _kepatuhanPersen = 0;
+  int _konsultasi = 0;
+
   @override
   void initState() {
     super.initState();
@@ -44,10 +50,26 @@ class _ProfilPageState extends State<ProfilPage> {
       _isLoading = true;
     });
 
+    await FamilyRepository.instance.init();
+    await ObatRepository.instance.init();
+    await RiwayatPemeriksaanRepository.instance.init();
+
     final member = await FamilyRepository.instance.getActiveMember();
+
+    final obatRepo = ObatRepository.instance;
+    final int kepatuhan = obatRepo.getKepatuhanPersen();
+    final int hari = obatRepo.getHariKe();
+
+    final riwayatList = RiwayatPemeriksaanRepository.instance.riwayatList;
+    final int konsultasi = riwayatList
+        .where((item) => item.type == 'Konsultasi')
+        .length;
 
     setState(() {
       _activeMember = member;
+      _hariPengobatan = hari;
+      _kepatuhanPersen = kepatuhan;
+      _konsultasi = konsultasi;
       _isLoading = false;
     });
   }
@@ -90,9 +112,7 @@ class _ProfilPageState extends State<ProfilPage> {
       return const Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          child: CircularProgressIndicator(color: AppColors.primary),
         ),
       );
     }
@@ -112,9 +132,9 @@ class _ProfilPageState extends State<ProfilPage> {
               usia: '${member.age} tahun',
               lokasi: 'Jakarta Selatan',
               status: member.status,
-              hariPengobatan: member.hariPengobatan,
-              kepatuhanPersen: member.kepatuhanPersen,
-              konsultasi: member.konsultasi,
+              hariPengobatan: _hariPengobatan,
+              kepatuhanPersen: _kepatuhanPersen,
+              konsultasi: _konsultasi,
             ),
             const SizedBox(height: 20),
 

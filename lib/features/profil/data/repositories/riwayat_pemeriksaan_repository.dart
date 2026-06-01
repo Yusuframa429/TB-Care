@@ -22,22 +22,27 @@ class RiwayatPemeriksaanRepository {
   bool _initialized = false;
 
   /// Dapatkan list riwayat ter-cache secara sinkron (hanya valid setelah [init] dipanggil).
-  List<RiwayatPemeriksaanModel> get riwayatList => List.unmodifiable(_riwayatList);
+  List<RiwayatPemeriksaanModel> get riwayatList =>
+      List.unmodifiable(_riwayatList);
 
   /// Inisialisasi repository. Memuat riwayat pemeriksaan dari StorageService.
   Future<void> init() async {
     if (_initialized) return;
 
-    final currentUser = await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
+    final currentUser =
+        await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
     _boxName = 'hive_riwayat_pemeriksaan_$currentUser';
-    
+
     final riwayatStr = await _storage.get<String>(_boxName, _keyRiwayatList);
     if (riwayatStr != null) {
       try {
         final List<dynamic> decoded = jsonDecode(riwayatStr) as List;
         _riwayatList = decoded
-            .map((item) => RiwayatPemeriksaanModel.fromJson(
-                item as Map<String, dynamic>))
+            .map(
+              (item) => RiwayatPemeriksaanModel.fromJson(
+                item as Map<String, dynamic>,
+              ),
+            )
             .toList();
       } catch (_) {
         _riwayatList = [];
@@ -57,8 +62,9 @@ class RiwayatPemeriksaanRepository {
 
   /// Simpan riwayat terbaru ke StorageService.
   Future<void> _saveToStorage() async {
-    final String encoded =
-        jsonEncode(_riwayatList.map((item) => item.toJson()).toList());
+    final String encoded = jsonEncode(
+      _riwayatList.map((item) => item.toJson()).toList(),
+    );
     await _storage.put(_boxName, _keyRiwayatList, encoded);
   }
 

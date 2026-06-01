@@ -28,7 +28,8 @@ class FamilyRepository {
   Future<void> init() async {
     if (_initialized) return;
 
-    final currentUser = await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
+    final currentUser =
+        await _storage.get<String>('auth_box', 'current_user') ?? 'guest';
     _boxName = 'hive_family_management_$currentUser';
 
     final membersStr = await _storage.get<String>(_boxName, _keyMemberList);
@@ -36,7 +37,10 @@ class FamilyRepository {
       try {
         final List<dynamic> decoded = jsonDecode(membersStr) as List;
         _members = decoded
-            .map((item) => FamilyMemberModel.fromJson(item as Map<String, dynamic>))
+            .map(
+              (item) =>
+                  FamilyMemberModel.fromJson(item as Map<String, dynamic>),
+            )
             .toList();
       } catch (_) {
         _loadDefaultData();
@@ -47,8 +51,10 @@ class FamilyRepository {
 
     // Selalu sinkronkan nama 'owner' dengan user yang sedang login
     final userData = await AuthRepository.instance.getCurrentUserData();
-    final ownerName = userData != null ? userData['name'] as String : 'Pengguna';
-    
+    final ownerName = userData != null
+        ? userData['name'] as String
+        : 'Pengguna';
+
     _members = _members.map((m) {
       if (m.id == 'owner') {
         return m.copyWith(name: ownerName);
@@ -79,7 +85,9 @@ class FamilyRepository {
 
   /// Simpan list anggota ke penyimpanan lokal.
   Future<void> _saveToStorage() async {
-    final String encoded = jsonEncode(_members.map((item) => item.toJson()).toList());
+    final String encoded = jsonEncode(
+      _members.map((item) => item.toJson()).toList(),
+    );
     await _storage.put(_boxName, _keyMemberList, encoded);
   }
 
@@ -92,10 +100,7 @@ class FamilyRepository {
   /// Mendapatkan anggota keluarga yang sedang aktif saat ini.
   Future<FamilyMemberModel> getActiveMember() async {
     await init();
-    return _members.firstWhere(
-      (m) => m.isActive,
-      orElse: () => _members.first,
-    );
+    return _members.firstWhere((m) => m.isActive, orElse: () => _members.first);
   }
 
   /// Mengubah pengguna aktif berdasarkan [id].
@@ -117,10 +122,10 @@ class FamilyRepository {
   /// Menghapus anggota keluarga berdasarkan [id].
   Future<void> deleteMember(String id) async {
     await init();
-    
+
     // Jika anggota yang dihapus sedang aktif, pindahkan status aktif ke owner
     final wasActive = _members.any((m) => m.id == id && m.isActive);
-    
+
     _members.removeWhere((m) => m.id == id);
 
     if (wasActive && _members.isNotEmpty) {

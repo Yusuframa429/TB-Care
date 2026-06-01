@@ -72,9 +72,7 @@ class ChatModeToggle extends StatelessWidget {
           color: isActive ? AppColors.primary : AppColors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isActive
-                ? AppColors.primary
-                : AppColors.border,
+            color: isActive ? AppColors.primary : AppColors.border,
             width: 1.2,
           ),
         ),

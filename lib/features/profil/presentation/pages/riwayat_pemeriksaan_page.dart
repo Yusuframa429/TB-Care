@@ -19,8 +19,7 @@ class RiwayatPemeriksaanPage extends StatefulWidget {
   const RiwayatPemeriksaanPage({super.key});
 
   @override
-  State<RiwayatPemeriksaanPage> createState() =>
-      _RiwayatPemeriksaanPageState();
+  State<RiwayatPemeriksaanPage> createState() => _RiwayatPemeriksaanPageState();
 }
 
 class _RiwayatPemeriksaanPageState extends State<RiwayatPemeriksaanPage> {
@@ -56,9 +55,7 @@ class _RiwayatPemeriksaanPageState extends State<RiwayatPemeriksaanPage> {
   /// [_activeFilter].
   List<RiwayatPemeriksaanModel> get _filteredRiwayat {
     if (_activeFilter == 'Semua') return _allRiwayat;
-    return _allRiwayat
-        .where((item) => item.type == _activeFilter)
-        .toList();
+    return _allRiwayat.where((item) => item.type == _activeFilter).toList();
   }
 
   @override
@@ -90,11 +87,7 @@ class _RiwayatPemeriksaanPageState extends State<RiwayatPemeriksaanPage> {
           /// Filter chips (Semua, AI Check, Konsultasi).
           Container(
             color: AppColors.white,
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              bottom: 16,
-            ),
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
             child: RiwayatFilterChips(
               activeFilter: _activeFilter,
               onFilterChanged: (filter) {
@@ -109,58 +102,59 @@ class _RiwayatPemeriksaanPageState extends State<RiwayatPemeriksaanPage> {
           Expanded(
             child: _isLoading
                 ? const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primary,
-                    ),
+                    child: CircularProgressIndicator(color: AppColors.primary),
                   )
                 : _filteredRiwayat.isEmpty
-                    ? _buildEmptyState()
-                    : RefreshIndicator(
-                        onRefresh: _loadRiwayat,
-                        color: AppColors.primary,
-                        child: ListView.separated(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 16,
-                          ),
-                          itemCount: _filteredRiwayat.length,
-                          separatorBuilder: (_, _) => const SizedBox(height: 12),
-                          itemBuilder: (context, index) {
-                            final item = _filteredRiwayat[index];
-                            return RiwayatCard(
-                              type: item.type,
-                              date: item.formattedDate,
-                              status: item.status,
-                              description: item.description,
-                              actionLabel: item.actionLabel,
-                              onActionTap: () {
-                                if (item.type == 'AI Check') {
-                                  // Rekonstruksi hasil skrining AI ke entitas asli
-                                  final result = item.toScreeningResult();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => HasilPemeriksaanPage(result: result),
-                                    ),
-                                  );
-                                } else if (item.type == 'Konsultasi') {
-                                  // Berikan feedback konsultasi dokter
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Detail rekaman konsultasi dengan ${item.description}'),
-                                      backgroundColor: AppColors.primary,
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                            );
-                          },
-                        ),
+                ? _buildEmptyState()
+                : RefreshIndicator(
+                    onRefresh: _loadRiwayat,
+                    color: AppColors.primary,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
                       ),
+                      itemCount: _filteredRiwayat.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final item = _filteredRiwayat[index];
+                        return RiwayatCard(
+                          type: item.type,
+                          date: item.formattedDate,
+                          status: item.status,
+                          description: item.description,
+                          actionLabel: item.actionLabel,
+                          onActionTap: () {
+                            if (item.type == 'AI Check') {
+                              // Rekonstruksi hasil skrining AI ke entitas asli
+                              final result = item.toScreeningResult();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      HasilPemeriksaanPage(result: result),
+                                ),
+                              );
+                            } else if (item.type == 'Konsultasi') {
+                              // Berikan feedback konsultasi dokter
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Detail rekaman konsultasi dengan ${item.description}',
+                                  ),
+                                  backgroundColor: AppColors.primary,
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

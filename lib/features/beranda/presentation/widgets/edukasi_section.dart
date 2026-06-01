@@ -75,10 +75,7 @@ class _ArtikelPreviewCard extends StatelessWidget {
   final Artikel artikel;
   final VoidCallback onTap;
 
-  const _ArtikelPreviewCard({
-    required this.artikel,
-    required this.onTap,
-  });
+  const _ArtikelPreviewCard({required this.artikel, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +94,9 @@ class _ArtikelPreviewCard extends StatelessWidget {
           children: [
             /// Thumbnail gambar artikel dari URL.
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: Stack(
                 children: [
                   Image.network(
@@ -128,8 +126,11 @@ class _ArtikelPreviewCard extends StatelessWidget {
                         height: 100,
                         color: const Color(0xFFF3F4F6),
                         child: const Center(
-                          child: Icon(Icons.image_outlined,
-                              size: 28, color: AppColors.textSecondary),
+                          child: Icon(
+                            Icons.image_outlined,
+                            size: 28,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       );
                     },
@@ -142,7 +143,9 @@ class _ArtikelPreviewCard extends StatelessWidget {
                       right: 8,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: style.bgColor.withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(8),
@@ -165,7 +168,9 @@ class _ArtikelPreviewCard extends StatelessWidget {
                       left: 8,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 7, vertical: 3),
+                          horizontal: 7,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.primary,
                           borderRadius: BorderRadius.circular(8),
@@ -173,8 +178,11 @@ class _ArtikelPreviewCard extends StatelessWidget {
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.circle,
-                                size: 5, color: Color(0xFF4ADE80)),
+                            Icon(
+                              Icons.circle,
+                              size: 5,
+                              color: Color(0xFF4ADE80),
+                            ),
                             SizedBox(width: 3),
                             Text(
                               'Baru',
@@ -215,13 +223,18 @@ class _ArtikelPreviewCard extends StatelessWidget {
                   /// Durasi baca.
                   Row(
                     children: [
-                      const Icon(Icons.schedule,
-                          size: 12, color: AppColors.textSecondary),
+                      const Icon(
+                        Icons.schedule,
+                        size: 12,
+                        color: AppColors.textSecondary,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${artikel.waktuBacaMenit} menit',
                         style: const TextStyle(
-                            fontSize: 11, color: AppColors.textSecondary),
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),

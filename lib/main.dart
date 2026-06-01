@@ -8,7 +8,9 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/obat/data/obat_repository.dart';
 
 /// Notifier global untuk mengatur ukuran teks secara langsung (real-time) di seluruh aplikasi.
-final ValueNotifier<double> globalTextScaleNotifier = ValueNotifier<double>(1.0);
+final ValueNotifier<double> globalTextScaleNotifier = ValueNotifier<double>(
+  1.0,
+);
 
 /// Entry point aplikasi TB Care.
 ///
@@ -42,12 +44,18 @@ Future<void> main() async {
     await ObatRepository.instance.init();
 
     // ── Ambil Pengaturan Aksesibilitas Terakhir ───────────────────
-    final savedScale = await StorageService.instance.get<double>('settings_box', 'text_scale_factor');
+    final savedScale = await StorageService.instance.get<double>(
+      'settings_box',
+      'text_scale_factor',
+    );
     if (savedScale != null) {
       globalTextScaleNotifier.value = savedScale;
     }
     // ── Cek Sesi Login ───────────────────────────────────────────
-    final String? currentUser = await StorageService.instance.get<String>('auth_box', 'current_user');
+    final String? currentUser = await StorageService.instance.get<String>(
+      'auth_box',
+      'current_user',
+    );
     final bool isLoggedIn = currentUser != null;
 
     runApp(TbCareApp(isLoggedIn: isLoggedIn));
@@ -99,9 +107,9 @@ class TbCareApp extends StatelessWidget {
           /// Meng-override ukuran teks dasar untuk seluruh aplikasi
           builder: (context, widget) {
             return MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(textScale),
-              ),
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(textScale)),
               child: widget!,
             );
           },

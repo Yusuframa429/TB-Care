@@ -15,11 +15,7 @@ class ChatBubble extends StatelessWidget {
   /// Waktu pengiriman pesan (format "HH:mm").
   final String timestamp;
 
-  const ChatBubble({
-    super.key,
-    required this.message,
-    required this.timestamp,
-  });
+  const ChatBubble({super.key, required this.message, required this.timestamp});
 
   @override
   Widget build(BuildContext context) {

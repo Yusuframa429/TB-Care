@@ -44,10 +44,12 @@ class _EdukasiListPageState extends State<EdukasiListPage> {
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       list = list
-          .where((a) =>
-              a.judul.toLowerCase().contains(query) ||
-              a.deskripsi.toLowerCase().contains(query) ||
-              a.kategori.toLowerCase().contains(query))
+          .where(
+            (a) =>
+                a.judul.toLowerCase().contains(query) ||
+                a.deskripsi.toLowerCase().contains(query) ||
+                a.kategori.toLowerCase().contains(query),
+          )
           .toList();
     }
 
@@ -94,7 +96,10 @@ class _EdukasiListPageState extends State<EdukasiListPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: AppColors.textSecondary),
+            icon: const Icon(
+              Icons.refresh_rounded,
+              color: AppColors.textSecondary,
+            ),
             onPressed: () => setState(() {}),
           ),
         ],
@@ -264,16 +269,24 @@ class _ArtikelListCard extends StatelessWidget {
   final Artikel artikel;
   final VoidCallback onTap;
 
-  const _ArtikelListCard({
-    required this.artikel,
-    required this.onTap,
-  });
+  const _ArtikelListCard({required this.artikel, required this.onTap});
 
   /// Format tanggal ke Bahasa Indonesia tanpa package intl.
   static String _formatTanggal(DateTime date) {
     const bulan = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des',
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
     ];
     return '${date.day} ${bulan[date.month]} ${date.year}';
   }
@@ -304,8 +317,9 @@ class _ArtikelListCard extends StatelessWidget {
           children: [
             /// Gambar artikel dengan badge overlay.
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: Stack(
                 children: [
                   // Gambar dari URL.
@@ -332,8 +346,11 @@ class _ArtikelListCard extends StatelessWidget {
                         height: 180,
                         color: const Color(0xFFF3F4F6),
                         child: const Center(
-                          child: Icon(Icons.image_not_supported_outlined,
-                              size: 40, color: AppColors.textSecondary),
+                          child: Icon(
+                            Icons.image_not_supported_outlined,
+                            size: 40,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       );
                     },
@@ -346,7 +363,9 @@ class _ArtikelListCard extends StatelessWidget {
                       left: 12,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.primary,
                           borderRadius: BorderRadius.circular(20),
@@ -354,7 +373,11 @@ class _ArtikelListCard extends StatelessWidget {
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.circle, size: 6, color: Color(0xFF4ADE80)),
+                            Icon(
+                              Icons.circle,
+                              size: 6,
+                              color: Color(0xFF4ADE80),
+                            ),
                             SizedBox(width: 5),
                             Text(
                               'Baru',
@@ -376,7 +399,9 @@ class _ArtikelListCard extends StatelessWidget {
                       right: 12,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                         decoration: BoxDecoration(
                           color: style.bgColor.withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(20),
@@ -431,9 +456,11 @@ class _ArtikelListCard extends StatelessWidget {
                   // Tanggal & durasi baca.
                   Row(
                     children: [
-                      Icon(Icons.calendar_today_outlined,
-                          size: 13,
-                          color: AppColors.textSecondary.withValues(alpha: 0.6)),
+                      Icon(
+                        Icons.calendar_today_outlined,
+                        size: 13,
+                        color: AppColors.textSecondary.withValues(alpha: 0.6),
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         dateStr,
@@ -451,9 +478,11 @@ class _ArtikelListCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Icon(Icons.schedule,
-                          size: 13,
-                          color: AppColors.textSecondary.withValues(alpha: 0.6)),
+                      Icon(
+                        Icons.schedule,
+                        size: 13,
+                        color: AppColors.textSecondary.withValues(alpha: 0.6),
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${artikel.waktuBacaMenit} menit',

@@ -116,9 +116,7 @@ class WaktuMinumSelector extends StatelessWidget {
                     color: isSelected ? AppColors.primary : AppColors.white,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isSelected
-                          ? AppColors.primary
-                          : AppColors.border,
+                      color: isSelected ? AppColors.primary : AppColors.border,
                     ),
                   ),
                   child: Text(

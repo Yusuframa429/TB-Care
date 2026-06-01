@@ -59,186 +59,186 @@ class JadwalHariIniCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isSudahMinum
-              ? AppColors.primary.withValues(alpha: 0.2)
-              : AppColors.border,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.cardShadow,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSudahMinum
+                ? AppColors.primary.withValues(alpha: 0.2)
+                : AppColors.border,
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// Baris atas: waktu + nama sesi + status/tombol cek.
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// Kolom waktu dengan ikon jam.
-              Column(
-                children: [
-                  Icon(
-                    Icons.access_time_filled_rounded,
-                    color: warnaSesi,
-                    size: 20,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    waktu,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: warnaSesi,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 14),
-
-              /// Kolom tengah: nama sesi + badge status + daftar obat.
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.cardShadow,
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Baris atas: waktu + nama sesi + status/tombol cek.
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Kolom waktu dengan ikon jam.
+                Column(
                   children: [
-                    /// Baris nama sesi + badge jika sudah minum.
-                    Row(
-                      children: [
-                        Text(
-                          namaSesi,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        if (isSudahMinum) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryLight,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: AppColors.primary,
-                                  size: 12,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Sudah diminum',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
+                    Icon(
+                      Icons.access_time_filled_rounded,
+                      color: warnaSesi,
+                      size: 20,
                     ),
                     const SizedBox(height: 4),
-
-                    /// Daftar obat.
                     Text(
-                      daftarObat,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.textSecondary,
+                      waktu,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: warnaSesi,
                       ),
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(width: 14),
 
-              /// Tombol centang jika sudah minum.
-              if (isSudahMinum)
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check,
-                    color: AppColors.white,
-                    size: 18,
+                /// Kolom tengah: nama sesi + badge status + daftar obat.
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Baris nama sesi + badge jika sudah minum.
+                      Row(
+                        children: [
+                          Text(
+                            namaSesi,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          if (isSudahMinum) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryLight,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: AppColors.primary,
+                                    size: 12,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'Sudah diminum',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+
+                      /// Daftar obat.
+                      Text(
+                        daftarObat,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-            ],
-          ),
 
-          /// Baris tombol aksi (jika belum minum).
-          if (!isSudahMinum) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                /// Tombol "Sudah Minum".
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: onSudahMinum,
-                    icon: const Icon(Icons.check, size: 16),
-                    label: const Text('Sudah Minum'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: AppColors.white,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
+                /// Tombol centang jika sudah minum.
+                if (isSudahMinum)
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: AppColors.white,
+                      size: 18,
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-
-                /// Tombol "Tunda 30 min".
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: onTunda,
-                    icon: const Icon(Icons.access_time, size: 16),
-                    label: const Text('Tunda 30 min'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textSecondary,
-                      side: const BorderSide(color: AppColors.border),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
+
+            /// Baris tombol aksi (jika belum minum).
+            if (!isSudahMinum) ...[
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  /// Tombol "Sudah Minum".
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: onSudahMinum,
+                      icon: const Icon(Icons.check, size: 16),
+                      label: const Text('Sudah Minum'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  /// Tombol "Tunda 30 min".
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onTunda,
+                      icon: const Icon(Icons.access_time, size: 16),
+                      label: const Text('Tunda 30 min'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.textSecondary,
+                        side: const BorderSide(color: AppColors.border),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
-      ),
+        ),
       ),
     );
   }

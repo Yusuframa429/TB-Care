@@ -61,10 +61,7 @@ class ProfilHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppColors.primaryDark,
-            AppColors.primary,
-          ],
+          colors: [AppColors.primaryDark, AppColors.primary],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(28),
@@ -145,7 +142,9 @@ class ProfilHeader extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.white.withValues(alpha: 0.95),
+                                  color: AppColors.white.withValues(
+                                    alpha: 0.95,
+                                  ),
                                 ),
                               ),
                             ],

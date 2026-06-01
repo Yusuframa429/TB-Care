@@ -48,6 +48,7 @@ class BerandaPageState extends State<BerandaPage> {
   String _pengingatTitle = 'Pengingat Obat';
   String _pengingatTime = '--:--';
   bool _pengingatIsTaken = false;
+  bool _hasJadwal = false;
 
   // ── Data live dari RiwayatPemeriksaanRepository ──
   int _cekBulanIni = 0;
@@ -66,7 +67,7 @@ class BerandaPageState extends State<BerandaPage> {
     await _repo.init();
     await RiwayatPemeriksaanRepository.instance.init();
     await FamilyRepository.instance.init();
-    
+
     _activeMember = await FamilyRepository.instance.getActiveMember();
     _recalculate();
     if (mounted) setState(() => _loading = false);
@@ -93,9 +94,10 @@ class BerandaPageState extends State<BerandaPage> {
     final waktu = sesi['waktu'] as String;
 
     // Cari jadwal obat di waktu tersebut
-    final obatSesi = _repo.getJadwalList().where(
-      (j) => j.waktuMinum.contains(waktu),
-    ).toList();
+    final obatSesi = _repo
+        .getJadwalList()
+        .where((j) => j.waktuMinum.contains(waktu))
+        .toList();
 
     if (obatSesi.isEmpty) return;
 
@@ -183,14 +185,13 @@ class BerandaPageState extends State<BerandaPage> {
   void _onKepatuhanTap() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const ObatPage(),
-      ),
+      MaterialPageRoute(builder: (_) => const ObatPage()),
     );
   }
 
   /// Hitung ulang data kepatuhan, pengingat, dan riwayat kesehatan.
   void _recalculate() {
+    _hasJadwal = _repo.getJadwalList().isNotEmpty;
     _kepatuhanPersen = _repo.getKepatuhanPersen();
     _streak = _repo.getStreak();
 
@@ -198,10 +199,12 @@ class BerandaPageState extends State<BerandaPage> {
     final riwayatList = RiwayatPemeriksaanRepository.instance.riwayatList;
     final now = DateTime.now();
     _cekBulanIni = riwayatList
-        .where((item) =>
-            item.type == 'AI Check' &&
-            item.date.month == now.month &&
-            item.date.year == now.year)
+        .where(
+          (item) =>
+              item.type == 'AI Check' &&
+              item.date.month == now.month &&
+              item.date.year == now.year,
+        )
         .length;
     _konsultasiSelesai = riwayatList
         .where((item) => item.type == 'Konsultasi')
@@ -209,9 +212,7 @@ class BerandaPageState extends State<BerandaPage> {
 
     // Cari sesi berikutnya yang belum diminum hari ini.
     final sesiHariIni = _repo.getSesiHariIni();
-    final sesiBelum = sesiHariIni.where(
-      (s) => s['sudahMinum'] == false,
-    );
+    final sesiBelum = sesiHariIni.where((s) => s['sudahMinum'] == false);
 
     if (sesiBelum.isNotEmpty) {
       final next = sesiBelum.first;
@@ -248,9 +249,7 @@ class BerandaPageState extends State<BerandaPage> {
               onStartTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const CekAiPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const CekAiPage()),
                 );
               },
             ),
@@ -272,15 +271,15 @@ class BerandaPageState extends State<BerandaPage> {
             const SizedBox(height: 16),
 
             /// Kartu pengingat obat — data live dari ObatRepository.
-            _loading
-                ? const SizedBox.shrink()
-                : PengingatObatCard(
-                    title: _pengingatTitle,
-                    time: _pengingatTime,
-                    isTaken: _pengingatIsTaken,
-                    onTap: _onPengingatTap,
-                  ),
-            const SizedBox(height: 16),
+            if (!_loading && _hasJadwal) ...[
+              PengingatObatCard(
+                title: _pengingatTitle,
+                time: _pengingatTime,
+                isTaken: _pengingatIsTaken,
+                onTap: _onPengingatTap,
+              ),
+              const SizedBox(height: 16),
+            ],
 
             /// Kartu kepatuhan obat — data live dari ObatRepository.
             _loading
@@ -297,9 +296,7 @@ class BerandaPageState extends State<BerandaPage> {
               onSemuaArtikel: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const EdukasiListPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const EdukasiListPage()),
                 );
               },
             ),
@@ -307,7 +304,8 @@ class BerandaPageState extends State<BerandaPage> {
 
             /// Kartu fakta "Tahukah Anda?".
             const TahukahAndaCard(
-              fact: 'TBC adalah penyakit yang bisa disembuhkan dengan pengobatan tepat',
+              fact:
+                  'TBC adalah penyakit yang bisa disembuhkan dengan pengobatan tepat',
             ),
             const SizedBox(height: 24),
           ],
@@ -322,10 +320,7 @@ class _ObatListItem extends StatelessWidget {
   final JadwalObat jadwal;
   final VoidCallback onTap;
 
-  const _ObatListItem({
-    required this.jadwal,
-    required this.onTap,
-  });
+  const _ObatListItem({required this.jadwal, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

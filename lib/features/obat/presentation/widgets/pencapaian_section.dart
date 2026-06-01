@@ -19,10 +19,7 @@ class PencapaianSection extends StatelessWidget {
   /// Daftar pencapaian dari [ObatRepository.getPencapaian()].
   final List<Map<String, dynamic>> pencapaianList;
 
-  const PencapaianSection({
-    super.key,
-    required this.pencapaianList,
-  });
+  const PencapaianSection({super.key, required this.pencapaianList});
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +65,42 @@ class PencapaianSection extends StatelessWidget {
 
   /// Data dummy (dipakai jika pencapaianList kosong).
   static const List<Map<String, dynamic>> _dummy = [
-    {'emoji': '🔥', 'label': 'Streak 14 Hari', 'unlocked': false, 'bgColor': 0xFFF3F4F6},
-    {'emoji': '⭐', 'label': 'Kepatuhan 90%+', 'unlocked': false, 'bgColor': 0xFFF3F4F6},
-    {'emoji': '🏆', 'label': 'Seminggu Penuh', 'unlocked': false, 'bgColor': 0xFFF3F4F6},
-    {'emoji': '💎', 'label': '1 Bulan Sempurna', 'unlocked': false, 'bgColor': 0xFFF3F4F6},
-    {'emoji': '🎯', 'label': '3 Bulan Konsisten', 'unlocked': false, 'bgColor': 0xFFF3F4F6},
-    {'emoji': '🎓', 'label': 'Pengobatan Selesai', 'unlocked': false, 'bgColor': 0xFFF3F4F6},
+    {
+      'emoji': '🔥',
+      'label': 'Streak 14 Hari',
+      'unlocked': false,
+      'bgColor': 0xFFF3F4F6,
+    },
+    {
+      'emoji': '⭐',
+      'label': 'Kepatuhan 90%+',
+      'unlocked': false,
+      'bgColor': 0xFFF3F4F6,
+    },
+    {
+      'emoji': '🏆',
+      'label': 'Seminggu Penuh',
+      'unlocked': false,
+      'bgColor': 0xFFF3F4F6,
+    },
+    {
+      'emoji': '💎',
+      'label': '1 Bulan Sempurna',
+      'unlocked': false,
+      'bgColor': 0xFFF3F4F6,
+    },
+    {
+      'emoji': '🎯',
+      'label': '3 Bulan Konsisten',
+      'unlocked': false,
+      'bgColor': 0xFFF3F4F6,
+    },
+    {
+      'emoji': '🎓',
+      'label': 'Pengobatan Selesai',
+      'unlocked': false,
+      'bgColor': 0xFFF3F4F6,
+    },
   ];
 }
 
@@ -115,7 +142,9 @@ class _BadgeItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
-                color: isUnlocked ? AppColors.textPrimary : AppColors.textSecondary,
+                color: isUnlocked
+                    ? AppColors.textPrimary
+                    : AppColors.textSecondary,
               ),
               textAlign: TextAlign.center,
               maxLines: 2,

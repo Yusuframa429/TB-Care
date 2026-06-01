@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 
 /// [DetailHeaderCard] - Kartu header gradient untuk halaman Detail Obat.
@@ -45,7 +45,11 @@ class DetailHeaderCard extends StatelessWidget {
               color: AppColors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.medication_rounded, color: AppColors.white, size: 28),
+            child: const Icon(
+              Icons.medication_rounded,
+              color: AppColors.white,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -54,12 +58,21 @@ class DetailHeaderCard extends StatelessWidget {
               children: [
                 Text(
                   namaObat,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.white, height: 1.2),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.white,
+                    height: 1.2,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   dosisLabel,
-                  style: TextStyle(fontSize: 14, color: AppColors.white.withValues(alpha: 0.85), fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.white.withValues(alpha: 0.85),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -72,7 +85,11 @@ class DetailHeaderCard extends StatelessWidget {
             ),
             child: Text(
               isNotifikasiAktif ? 'Aktif' : 'Nonaktif',
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.white),
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.white,
+              ),
             ),
           ),
         ],

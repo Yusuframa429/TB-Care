@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 
 /// [DetailWaktuCard] - Kartu daftar waktu minum obat.
@@ -33,7 +33,11 @@ class DetailWaktuCard extends StatelessWidget {
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: AppColors.cardShadow, blurRadius: 10, offset: const Offset(0, 2)),
+          BoxShadow(
+            color: AppColors.cardShadow,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
@@ -53,15 +57,32 @@ class DetailWaktuCard extends StatelessWidget {
                         color: _warnaSesi(waktu).withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.access_time_filled_rounded, color: _warnaSesi(waktu), size: 20),
+                      child: Icon(
+                        Icons.access_time_filled_rounded,
+                        color: _warnaSesi(waktu),
+                        size: 20,
+                      ),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(waktu, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                          Text(_namaSesi(waktu), style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                          Text(
+                            waktu,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          Text(
+                            _namaSesi(waktu),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ],
                       ),
                     ),

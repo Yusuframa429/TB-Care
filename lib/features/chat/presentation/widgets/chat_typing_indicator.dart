@@ -82,7 +82,10 @@ class _ChatTypingIndicatorState extends State<ChatTypingIndicator>
                   children: List.generate(3, (index) {
                     // Setiap dot mulai bergerak pada phase yang berbeda.
                     final delay = index * 0.2;
-                    final progress = (_controller.value - delay).clamp(0.0, 1.0);
+                    final progress = (_controller.value - delay).clamp(
+                      0.0,
+                      1.0,
+                    );
 
                     // Bounce effect: naik di paruh pertama, turun di paruh kedua.
                     final bounce = progress < 0.5
@@ -90,9 +93,7 @@ class _ChatTypingIndicatorState extends State<ChatTypingIndicator>
                         : 2.0 - (progress * 2);
 
                     return Padding(
-                      padding: EdgeInsets.only(
-                        right: index < 2 ? 5 : 0,
-                      ),
+                      padding: EdgeInsets.only(right: index < 2 ? 5 : 0),
                       child: Transform.translate(
                         offset: Offset(0, -4 * bounce),
                         child: Container(

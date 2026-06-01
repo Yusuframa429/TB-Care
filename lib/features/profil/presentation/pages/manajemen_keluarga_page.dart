@@ -43,7 +43,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
     await _loadData();
 
     if (!mounted) return;
-    
+
     // Tampilkan snackbar konfirmasi pergantian user
     final activeMember = _allMembers.firstWhere((m) => m.id == id);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -52,9 +52,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
         backgroundColor: AppColors.primary,
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
@@ -64,9 +62,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text(
           'Hapus Anggota?',
           style: TextStyle(
@@ -77,10 +73,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
         ),
         content: Text(
           'Apakah Anda yakin ingin menghapus ${member.name} dari daftar anggota keluarga Anda?',
-          style: const TextStyle(
-            fontSize: 14,
-            color: AppColors.textSecondary,
-          ),
+          style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
@@ -135,7 +128,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
       'Anak',
       'Suami',
       'Istri',
-      'Lainnya'
+      'Lainnya',
     ];
 
     showModalBottomSheet(
@@ -152,9 +145,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
               child: Container(
                 decoration: const BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                 ),
                 padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
                 child: Form(
@@ -264,16 +255,18 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
                                         color: AppColors.textSecondary,
                                       ),
                                       items: relationshipOptions
-                                          .map((opt) => DropdownMenuItem(
-                                                value: opt,
-                                                child: Text(
-                                                  opt,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: AppColors.textPrimary,
-                                                  ),
+                                          .map(
+                                            (opt) => DropdownMenuItem(
+                                              value: opt,
+                                              child: Text(
+                                                opt,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: AppColors.textPrimary,
                                                 ),
-                                              ))
+                                              ),
+                                            ),
+                                          )
                                           .toList(),
                                       onChanged: (val) {
                                         if (val != null) {
@@ -348,7 +341,8 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
                               final newMember = FamilyMemberModel(
-                                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                id: DateTime.now().millisecondsSinceEpoch
+                                    .toString(),
                                 name: name,
                                 relationship: relationship,
                                 age: age,
@@ -360,7 +354,9 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
                                 konsultasi: 0,
                               );
 
-                              await FamilyRepository.instance.addMember(newMember);
+                              await FamilyRepository.instance.addMember(
+                                newMember,
+                              );
                               if (!context.mounted) return;
                               Navigator.pop(context);
                               _loadData();
@@ -400,16 +396,16 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
       return const Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          child: CircularProgressIndicator(color: AppColors.primary),
         ),
       );
     }
 
     // Pisahkan user utama ("Saya") dengan anggota keluarga lainnya
     final ownerIndex = _allMembers.indexWhere((m) => m.id == 'owner');
-    final FamilyMemberModel? owner = ownerIndex != -1 ? _allMembers[ownerIndex] : null;
+    final FamilyMemberModel? owner = ownerIndex != -1
+        ? _allMembers[ownerIndex]
+        : null;
     final otherMembers = _allMembers.where((m) => m.id != 'owner').toList();
 
     return Scaffold(
@@ -530,8 +526,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
                         ),
                       ),
                       // Badge Aktif
-                      if (owner.isActive)
-                        _buildActiveBadge()
+                      if (owner.isActive) _buildActiveBadge(),
                     ],
                   ),
                 ),
@@ -555,7 +550,10 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
               // Tampilan jika anggota keluarga kosong
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 32,
+                  horizontal: 16,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.cardBackground,
                   borderRadius: BorderRadius.circular(16),
@@ -632,7 +630,9 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
                                 width: 44,
                                 height: 44,
                                 decoration: const BoxDecoration(
-                                  color: Color(0xFF5E6E82), // Slate Blue premium
+                                  color: Color(
+                                    0xFF5E6E82,
+                                  ), // Slate Blue premium
                                   shape: BoxShape.circle,
                                 ),
                                 alignment: Alignment.center,
@@ -718,11 +718,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
               height: 50,
               child: OutlinedButton.icon(
                 onPressed: _showAddMemberBottomSheet,
-                icon: const Icon(
-                  Icons.add,
-                  color: AppColors.primary,
-                  size: 20,
-                ),
+                icon: const Icon(Icons.add, color: AppColors.primary, size: 20),
                 label: const Text(
                   'Tambah Anggota',
                   style: TextStyle(
@@ -732,10 +728,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: AppColors.primary,
-                    width: 1.5,
-                  ),
+                  side: const BorderSide(color: AppColors.primary, width: 1.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -760,11 +753,7 @@ class _ManajemenKeluargaPageState extends State<ManajemenKeluargaPage> {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.circle,
-            color: Color(0xFF27AE60),
-            size: 8,
-          ),
+          Icon(Icons.circle, color: Color(0xFF27AE60), size: 8),
           SizedBox(width: 6),
           Text(
             'Aktif',
