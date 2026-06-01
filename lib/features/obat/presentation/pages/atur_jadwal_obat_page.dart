@@ -48,7 +48,7 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
 
   // --- State form ---
   String _satuanDosis = 'tablet';
-  List<TimeOfDay> _waktuMinumList = [];
+  final List<TimeOfDay> _waktuMinumList = [];
   String _kondisiMakan = 'Sebelum makan';
   String _frekuensi = 'Setiap hari';
 
@@ -99,6 +99,10 @@ class _AturJadwalObatPageState extends State<AturJadwalObatPage> {
       catatan: _catatanController.text.trim().isEmpty
           ? null
           : _catatanController.text.trim(),
+      // ⚡ Kirim preferensi notifikasi dari toggle user.
+      isNotifikasiAktif: _isNotifikasiAktif,
+      isGetar: _isGetar,
+      isSuara: _isSuara,
     );
 
     await ObatRepository.instance.simpanJadwal(jadwal);

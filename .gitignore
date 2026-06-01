@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+.env
 
 # IntelliJ related
 *.iml
@@ -56,4 +57,6 @@ app.*.map.json
 **/android/**/generated_plugin_registrant.cc
 
 # Environment variables
+
+# Environments
 .env

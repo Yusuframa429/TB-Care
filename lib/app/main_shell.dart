@@ -28,26 +28,36 @@ class _MainShellState extends State<MainShell> {
   /// Default: 0 (Beranda).
   int _currentIndex = 0;
 
+  /// Key untuk mengakses state BerandaPage agar bisa trigger refresh
+  /// saat user kembali ke tab beranda dari tab lain (misal: Obat).
+  final _berandaKey = GlobalKey<BerandaPageState>();
+
   /// Daftar halaman yang ditampilkan sesuai urutan item navbar.
   ///
   /// Urutan harus sesuai dengan urutan item di [TbCareBottomNavbar]:
   /// 0 = Beranda, 1 = Cek AI, 2 = Chat, 3 = Obat, 4 = Profil.
-  final List<Widget> _pages = const [
-    BerandaPage(),
-    CekAiPage(),
-    ChatPage(),
-    ObatPage(),
-    ProfilPage(),
+  late final List<Widget> _pages = [
+    BerandaPage(key: _berandaKey),
+    const CekAiPage(),
+    const ChatPage(),
+    const ObatPage(),
+    const ProfilPage(),
   ];
 
   /// Callback yang dipanggil saat user menekan item navbar.
   ///
   /// Mengubah [_currentIndex] agar [IndexedStack] menampilkan
   /// halaman yang sesuai dengan tab yang dipilih.
+  /// Jika kembali ke Beranda (index 0), trigger refresh data.
   void _onNavbarTap(int index) {
     setState(() {
       _currentIndex = index;
     });
+
+    // Refresh data beranda saat user berpindah ke tab Beranda.
+    if (index == 0) {
+      _berandaKey.currentState?.refreshData();
+    }
   }
 
   @override

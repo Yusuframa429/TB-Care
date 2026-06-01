@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:core_ui/core_ui.dart';
 
 import '../../data/obat_repository.dart';
+import '../../domain/entities/jadwal_obat.dart';
 import '../widgets/obat_progress_card.dart';
 import '../widgets/minggu_ini_card.dart';
 import '../widgets/streak_card.dart';
@@ -9,6 +10,7 @@ import '../widgets/jadwal_hari_ini_card.dart';
 import '../widgets/statistik_kepatuhan_card.dart';
 import '../widgets/pencapaian_section.dart';
 import 'atur_jadwal_obat_page.dart';
+import 'detail_obat_page.dart';
 
 /// [ObatPage] - Halaman dashboard pengingat dan kepatuhan minum obat.
 ///
@@ -110,6 +112,99 @@ class _ObatPageState extends State<ObatPage> {
     );
   }
 
+  /// Navigasi ke halaman detail setelah user memilih obat dari bottom sheet.
+  void _onTapSesi(String waktu) {
+    // Cari semua jadwal obat yang memiliki waktu ini.
+    final obatSesi = _repo.getJadwalList().where(
+      (j) => j.waktuMinum.contains(waktu),
+    ).toList();
+
+    if (obatSesi.isEmpty) return;
+
+    // Jika hanya satu obat, langsung ke detail.
+    if (obatSesi.length == 1) {
+      _navigateToDetail(obatSesi.first);
+      return;
+    }
+
+    // Jika lebih dari satu, tampilkan bottom sheet pilihan.
+    _showPilihObatSheet(obatSesi);
+  }
+
+  /// Tampilkan bottom sheet daftar obat dalam sesi ini.
+  void _showPilihObatSheet(List<JadwalObat> daftarObat) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Handle bar.
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Pilih Obat',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Tap untuk melihat detail obat',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSecondary.withValues(alpha: 0.8),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ...daftarObat.map((obat) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: _ObatListItem(
+                      jadwal: obat,
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _navigateToDetail(obat);
+                      },
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Navigasi ke halaman detail obat.
+  void _navigateToDetail(JadwalObat jadwal) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DetailObatPage(jadwal: jadwal),
+      ),
+    );
+  }
+
   /// Navigasi ke halaman tambah jadwal, reload data saat kembali.
   Future<void> _navigasiTambahJadwal() async {
     final result = await Navigator.push<bool>(
@@ -197,6 +292,7 @@ class _ObatPageState extends State<ObatPage> {
                           warnaSesi: warnaSesi,
                           onSudahMinum: () => _onSudahMinum(waktu),
                           onTunda: () => _onTunda(waktu),
+                          onTap: () => _onTapSesi(waktu),
                         ),
                       );
                     }),
@@ -280,6 +376,19 @@ class _ObatPageState extends State<ObatPage> {
               ),
               child: Row(
                 children: [
+                  /// Tombol back hanya muncul jika halaman di-push (bukan tab).
+                  if (Navigator.canPop(context)) ...[
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_rounded,
+                        color: AppColors.textPrimary,
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   const Expanded(
                     child: Text(
                       'Pengingat Obat',
@@ -317,6 +426,77 @@ class _ObatPageState extends State<ObatPage> {
               ),
             ),
             const Divider(height: 1, color: AppColors.border),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// [_ObatListItem] - Item daftar obat untuk bottom sheet.
+class _ObatListItem extends StatelessWidget {
+  final JadwalObat jadwal;
+  final VoidCallback onTap;
+
+  const _ObatListItem({
+    required this.jadwal,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.primaryLight,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.medication_rounded,
+                color: AppColors.primary,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    jadwal.namaObat,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${jadwal.jumlahDosis} ${jadwal.satuanDosis}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.textSecondary,
+              size: 22,
+            ),
           ],
         ),
       ),
